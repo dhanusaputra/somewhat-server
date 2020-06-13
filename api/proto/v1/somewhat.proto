@@ -1,0 +1,85 @@
+syntax = "proto3";
+package v1;
+
+import "google/protobuf/timestamp.proto";
+
+// Somewhat ...
+service Somewhat {
+    // GetSomething ...
+    rpc GetSomething (GetSomethingRequest) returns (GetSomethingResponse);
+    // UpdateSomething ...
+    rpc UpdateSomething (UpdateSomethingRequest) returns (UpdateSomethingResponse);
+    // CreateSomething ...
+    rpc CreateSomething (CreateSomethingRequest) returns (CreateSomethingResponse);
+    // DeleteSomething ...
+    rpc DeleteSomething (DeleteSomethingRequest) returns (DeleteSomethingResponse);
+    // ListSomething ...
+    rpc ListSomething (ListSomethingRequest) returns (ListSomethingResponse);
+}
+
+// Something ...
+message Something {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    google.protobuf.Timestamp createdAt = 4;
+}
+
+// GetSomethingRequest ...
+message GetSomethingRequest {
+    string api = 1;
+    string id = 2;
+}
+
+// GetSomethingResponse ...
+message GetSomethingResponse{
+    string api = 1;
+    Something something = 2;
+}
+
+// UpdateSomethingRequest ...
+message UpdateSomethingRequest {
+    string api = 1;
+    Something something = 2;
+}
+
+// UpdateSomethingResponse ...
+message UpdateSomethingResponse{
+    string api = 1;
+    bool updated = 2;
+}
+
+// CreateSomethingRequest ...
+message CreateSomethingRequest {
+    string api = 1;
+    Something something = 2;
+}
+
+// CreateSomethingResponse ...
+message CreateSomethingResponse{
+    string api = 1;
+    string id = 2;
+}
+
+// DeleteSomethingRequest ...
+message DeleteSomethingRequest {
+    string api = 1;
+    string id = 2;
+}
+
+// DeleteSomethingResponse ...
+message DeleteSomethingResponse{
+    string api = 1;
+    bool deleted = 2;
+}
+
+// ListSomethingRequest ...
+message ListSomethingRequest {
+    string api = 1;
+}
+
+// ListSomethingResponse ...
+message ListSomethingResponse{
+    string api = 1;
+    repeated Something somethings = 2;
+}
