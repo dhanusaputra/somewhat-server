@@ -2,19 +2,69 @@ syntax = "proto3";
 package v1;
 
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+	info: {
+		title: "somewhat";
+		version: "1.0";
+		contact: {
+			name: "somewhat project";
+			url: "https://github.com/dhanusaputra/somewhat-server";
+			email: "andreasdhanu@gmail.com";
+        };
+    };
+    schemes: HTTP;
+    consumes: "application/json";
+    produces: "application/json";
+    responses: {
+		key: "404";
+		value: {
+			description: "Returned when the resource does not exist.";
+			schema: {
+				json_schema: {
+					type: STRING;
+				}
+			}
+		}
+	}
+};
 
 // Somewhat ...
 service Somewhat {
     // GetSomething ...
-    rpc GetSomething (GetSomethingRequest) returns (GetSomethingResponse);
+    rpc GetSomething (GetSomethingRequest) returns (GetSomethingResponse){
+        option (google.api.http) = {
+            get: "/v1/something/{id}"
+        };
+    }
     // UpdateSomething ...
-    rpc UpdateSomething (UpdateSomethingRequest) returns (UpdateSomethingResponse);
+    rpc UpdateSomething (UpdateSomethingRequest) returns (UpdateSomethingResponse){
+        option (google.api.http) = {
+            put: "/v1/something/{something.id}"
+            body: "*"
+        };
+    }
     // CreateSomething ...
-    rpc CreateSomething (CreateSomethingRequest) returns (CreateSomethingResponse);
+    rpc CreateSomething (CreateSomethingRequest) returns (CreateSomethingResponse){
+        option (google.api.http) = {
+            post: "/v1/something"
+            body: "*"
+        };
+    }
     // DeleteSomething ...
-    rpc DeleteSomething (DeleteSomethingRequest) returns (DeleteSomethingResponse);
+    rpc DeleteSomething (DeleteSomethingRequest) returns (DeleteSomethingResponse){
+        option (google.api.http) = {
+            delete: "/v1/something/{id}"
+        };
+    }
     // ListSomething ...
-    rpc ListSomething (ListSomethingRequest) returns (ListSomethingResponse);
+    rpc ListSomething (ListSomethingRequest) returns (ListSomethingResponse){
+        option (google.api.http) = {
+            get: "/v1/something"
+        };
+    }
 }
 
 // Something ...
