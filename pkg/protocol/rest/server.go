@@ -2,7 +2,6 @@ package rest
 
 import (
 	"context"
-	"crypto/tls"
 	"net/http"
 	"os"
 	"os/signal"
@@ -32,9 +31,6 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 		// add handler with middleware
 		Handler: middleware.AddRequestID(
 			middleware.AddLogger(logger.Log, mux)),
-		TLSConfig: &tls.Config{
-			NextProtos: []string{"h2"},
-		},
 	}
 
 	// graceful shutdown
