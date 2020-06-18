@@ -72,10 +72,20 @@ func (s *Server) DeleteSomething(ctx context.Context, req *v1.DeleteSomethingReq
 
 // ListSomething ...
 func (s *Server) ListSomething(ctx context.Context, req *v1.ListSomethingRequest) (*v1.ListSomethingResponse, error) {
-	list := []*v1.Something{}
+	res := make([]*v1.Something, 0, len(s.data))
+	for k, v := range s.data {
+		jsonV, err := json.Marshal(v)
+		if err != nil {
+			return nil, status.Error(codes.Unknown, fmt.Sprintf("json has invalid format, err: %v", err))
+		}
+		res = append(res, &v1.Something{
+			Id:          k,
+			Description: string(jsonV),
+		})
+	}
 	return &v1.ListSomethingResponse{
 		Api:        apiVersion,
-		Somethings: list,
+		Somethings: res,
 	}, nil
 }
 
