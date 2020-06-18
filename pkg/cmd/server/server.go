@@ -2,16 +2,14 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
-	"os"
 
 	"github.com/dhanusaputra/somewhat-server/pkg/logger"
 	"github.com/dhanusaputra/somewhat-server/pkg/protocol/grpc"
 	"github.com/dhanusaputra/somewhat-server/pkg/protocol/rest"
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/service/v1"
+	"github.com/dhanusaputra/somewhat-server/util/jsonutil"
 )
 
 // Config is configuration for Server
@@ -56,7 +54,7 @@ func RunServer() error {
 		return fmt.Errorf("failed to initialize logger: %v", err)
 	}
 
-	data, err := getData("tmp/db.json")
+	data, err := jsonutil.ReadFile("tmp/db.json")
 	if err != nil {
 		return err
 	}
@@ -69,19 +67,4 @@ func RunServer() error {
 	}()
 
 	return grpc.RunServer(ctx, v1API, cfg.GRPCPort)
-}
-
-func getData(path string) (map[string]interface{}, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-	jsonValue, err := ioutil.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-	var res map[string]interface{}
-	json.Unmarshal(jsonValue, &res)
-	return res, nil
 }
