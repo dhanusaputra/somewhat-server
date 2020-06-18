@@ -39,7 +39,7 @@ func RunServer() error {
 	var cfg Config
 	flag.StringVar(&cfg.GRPCPort, "grpc-port", "9090", "gRPC port to bind")
 	flag.StringVar(&cfg.HTTPPort, "http-port", "8080", "HTTP port to bind")
-	flag.IntVar(&cfg.LogLevel, "log-level", 1, "Global log level")
+	flag.IntVar(&cfg.LogLevel, "log-level", -1, "Global log level")
 	flag.StringVar(&cfg.LogTimeFormat, "log-time-format", "2006-01-02T15:04:05.999999999Z07:00", "Print time format for logger e.g. 006-01-02T15:04:05Z07:00")
 	flag.Parse()
 
