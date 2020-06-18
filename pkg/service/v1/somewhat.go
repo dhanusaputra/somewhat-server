@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"os"
 
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 	"google.golang.org/grpc/codes"
@@ -17,11 +15,13 @@ const (
 )
 
 // Server ...
-type Server struct{}
+type Server struct {
+	data map[string]interface{}
+}
 
 // NewServer ...
-func NewServer() *Server {
-	return &Server{}
+func NewServer(data map[string]interface{}) *Server {
+	return &Server{data: data}
 }
 
 // GetSomething ...
@@ -30,14 +30,10 @@ func (s *Server) GetSomething(ctx context.Context, req *v1.GetSomethingRequest) 
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
-	data, err := s.getData("tmp/db.json")
-	if err != nil {
-		return nil, status.Error(codes.Unknown, fmt.Sprintf("failed to open file, err: %v", err))
-	}
-	if _, ok := data[req.Id]; !ok {
+	if _, ok := s.data[req.Id]; !ok {
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("failed to find %v", req.Id))
 	}
-	jsonData, err := json.Marshal(data[req.Id])
+	jsonData, err := json.Marshal(s.data[req.Id])
 	if err != nil {
 		return nil, status.Error(codes.Unknown, fmt.Sprintf("json has invalid format, err: %v", err))
 	}
@@ -93,19 +89,4 @@ func (s *Server) checkAPI(api string) error {
 		}
 	}
 	return nil
-}
-
-func (s *Server) getData(path string) (map[string]interface{}, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-	jsonValue, err := ioutil.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-	var res map[string]interface{}
-	json.Unmarshal(jsonValue, &res)
-	return res, nil
 }
