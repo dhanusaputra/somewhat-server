@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 	"google.golang.org/grpc/codes"
@@ -31,7 +32,7 @@ func (s *Server) GetSomething(ctx context.Context, req *v1.GetSomethingRequest) 
 		return nil, err
 	}
 	if _, ok := s.data[req.Id]; !ok {
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("failed to find %v", req.Id))
+		return nil, status.Error(codes.NotFound, fmt.Sprintf("failed to find ID: %v", req.Id))
 	}
 	b, err := json.Marshal(s.data[req.Id])
 	if err != nil {
@@ -52,9 +53,20 @@ func (s *Server) CreateSomething(ctx context.Context, req *v1.CreateSomethingReq
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
+	if strings.TrimSpace(req.Something.Id) == "" {
+		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("ID is required"))
+	}
+	if _, ok := s.data[req.Something.Id]; ok {
+		return nil, status.Error(codes.AlreadyExists, fmt.Sprintf("failed because ID: %v already exists", req.Something.Id))
+	}
+	// b, err := json.Marshal(req.Something.Description)
+	// if err != nil {
+	// 	return nil, status.Error(codes.Unknown, fmt.Sprintf("json has invalid format, err: %v", err))
+	// }
+	s.data[req.Something.Id] = req.Something.Description
 	return &v1.CreateSomethingResponse{
 		Api: apiVersion,
-		Id:  "",
+		Id:  req.Something.Id,
 	}, nil
 }
 
@@ -64,6 +76,14 @@ func (s *Server) UpdateSomething(ctx context.Context, req *v1.UpdateSomethingReq
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
+	if _, ok := s.data[req.Something.Id]; !ok {
+		return nil, status.Error(codes.NotFound, fmt.Sprintf("failed to find ID: %v", req.Something.Id))
+	}
+	// b, err := json.Marshal(req.Something.Description)
+	// if err != nil {
+	// 	return nil, status.Error(codes.Unknown, fmt.Sprintf("json has invalid format, err: %v", err))
+	// }
+	s.data[req.Something.Id] = req.Something.Description
 	return &v1.UpdateSomethingResponse{
 		Api:     apiVersion,
 		Updated: true,
@@ -77,7 +97,7 @@ func (s *Server) DeleteSomething(ctx context.Context, req *v1.DeleteSomethingReq
 		return nil, err
 	}
 	if _, ok := s.data[req.Id]; !ok {
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("failed to find %v", req.Id))
+		return nil, status.Error(codes.NotFound, fmt.Sprintf("failed to find ID: %v", req.Id))
 	}
 	delete(s.data, req.Id)
 	return &v1.DeleteSomethingResponse{
