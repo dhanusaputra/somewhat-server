@@ -57,13 +57,14 @@ func (s *Server) CreateSomething(ctx context.Context, req *v1.CreateSomethingReq
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("ID is required"))
 	}
 	if _, ok := s.data[req.Something.Id]; ok {
-		return nil, status.Error(codes.AlreadyExists, fmt.Sprintf("failed because ID: %v already exists", req.Something.Id))
+		return nil, status.Error(codes.AlreadyExists, fmt.Sprintf("failed to create, ID: %v already exists", req.Something.Id))
 	}
-	// b, err := json.Marshal(req.Something.Description)
-	// if err != nil {
-	// 	return nil, status.Error(codes.Unknown, fmt.Sprintf("json has invalid format, err: %v", err))
-	// }
-	s.data[req.Something.Id] = req.Something.Description
+	var desc map[string]string
+	err := json.Unmarshal([]byte(req.Something.Description), &desc)
+	if err != nil {
+		return nil, status.Error(codes.Unknown, fmt.Sprintf("json has invalid format, err: %v", err))
+	}
+	s.data[req.Something.Id] = desc
 	return &v1.CreateSomethingResponse{
 		Api: apiVersion,
 		Id:  req.Something.Id,
@@ -79,11 +80,12 @@ func (s *Server) UpdateSomething(ctx context.Context, req *v1.UpdateSomethingReq
 	if _, ok := s.data[req.Something.Id]; !ok {
 		return nil, status.Error(codes.NotFound, fmt.Sprintf("failed to find ID: %v", req.Something.Id))
 	}
-	// b, err := json.Marshal(req.Something.Description)
-	// if err != nil {
-	// 	return nil, status.Error(codes.Unknown, fmt.Sprintf("json has invalid format, err: %v", err))
-	// }
-	s.data[req.Something.Id] = req.Something.Description
+	var desc map[string]string
+	err := json.Unmarshal([]byte(req.Something.Description), &desc)
+	if err != nil {
+		return nil, status.Error(codes.Unknown, fmt.Sprintf("json has invalid format, err: %v", err))
+	}
+	s.data[req.Something.Id] = desc
 	return &v1.UpdateSomethingResponse{
 		Api:     apiVersion,
 		Updated: true,

@@ -1,4 +1,10 @@
 {
-    "id": {"nothing": "tidak ada yang personal di sini"},
-    "en": {"nothing": "nothing personal here"}
+    "id": {
+        "nothing": "tidak ada yang personal di sini",
+        "something": "ada yang personal di sini"
+    },
+    "en": {
+        "nothing": "nothing personal here",
+        "something": "it is personal"
+    }
 }
