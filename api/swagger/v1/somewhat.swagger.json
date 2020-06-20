@@ -339,7 +339,8 @@
           "type": "string"
         },
         "description": {
-          "type": "string"
+          "type": "string",
+          "format": "byte"
         },
         "createdAt": {
           "type": "string",

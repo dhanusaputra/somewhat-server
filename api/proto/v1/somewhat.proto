@@ -71,7 +71,7 @@ service Somewhat {
 message Something {
     string id = 1;
     string title = 2;
-    string description = 3;
+    bytes description = 3;
     google.protobuf.Timestamp createdAt = 4;
 }
 
