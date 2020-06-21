@@ -2,22 +2,24 @@ package jsonutil
 
 import (
 	"encoding/json"
+	"io"
 	"io/ioutil"
-	"os"
 )
+
+type ioReader interface {
+	io.Reader
+}
 
 // ReadFile ...
 func ReadFile(path string) (map[string]interface{}, error) {
-	file, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-	jsonValue, err := ioutil.ReadAll(file)
+	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 	var res map[string]interface{}
-	json.Unmarshal(jsonValue, &res)
+	err = json.Unmarshal(b, &res)
+	if err != nil {
+		return nil, err
+	}
 	return res, nil
 }

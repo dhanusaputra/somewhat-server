@@ -93,7 +93,7 @@ func TestGetSomething(t *testing.T) {
 				t.Errorf("GetSomething() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if err == nil && !reflect.DeepEqual(got, tt.want) {
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetSomething() = %v, want %v", got, tt.want)
 			}
 		})
@@ -185,7 +185,7 @@ func TestUpdateSomething(t *testing.T) {
 				t.Errorf("UpdateSomething() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if err == nil && !reflect.DeepEqual(got, tt.want) {
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("UpdateSomething() = %v, want %v", got, tt.want)
 			}
 		})
