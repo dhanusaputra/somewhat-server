@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"os"
 
 	"github.com/dhanusaputra/somewhat-server/pkg/logger"
 	"github.com/dhanusaputra/somewhat-server/pkg/protocol/grpc"
@@ -41,12 +42,18 @@ func RunServer() error {
 	flag.StringVar(&cfg.LogTimeFormat, "log-time-format", "2006-01-02T15:04:05.999999999Z07:00", "Print time format for logger e.g. 006-01-02T15:04:05Z07:00")
 	flag.Parse()
 
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = cfg.HTTPPort
+	}
+
 	if len(cfg.GRPCPort) == 0 {
 		return fmt.Errorf("invalid TCP port for gRPC server: '%s'", cfg.GRPCPort)
 	}
 
-	if len(cfg.HTTPPort) == 0 {
-		return fmt.Errorf("invalid TCP port for HTTP gateway: '%s'", cfg.HTTPPort)
+	if len(port) == 0 {
+		return fmt.Errorf("invalid TCP port for HTTP gateway: '%s'", port)
 	}
 
 	// initialize logger
@@ -63,7 +70,7 @@ func RunServer() error {
 
 	// run HTTP gateway
 	go func() {
-		_ = rest.RunServer(ctx, cfg.GRPCPort, cfg.HTTPPort)
+		_ = rest.RunServer(ctx, cfg.GRPCPort, port)
 	}()
 
 	return grpc.RunServer(ctx, v1API, cfg.GRPCPort)
