@@ -20,11 +20,17 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	mux := runtime.NewServeMux()
+	mux := http.NewServeMux()
+
+	gwmux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-	if err := v1.RegisterSomewhatHandlerFromEndpoint(ctx, mux, "localhost:"+grpcPort, opts); err != nil {
+	if err := v1.RegisterSomewhatHandlerFromEndpoint(ctx, gwmux, "localhost:"+grpcPort, opts); err != nil {
 		logger.Log.Fatal("failed to start HTTP gateway", zap.String("reason", err.Error()))
 	}
+	mux.Handle("/", gwmux)
+
+	fs := http.FileServer(http.Dir("./third_party/swagger-ui"))
+	mux.Handle("/swagger-ui/", http.StripPrefix("/swagger-ui/", fs))
 
 	srv := &http.Server{
 		Addr: ":" + httpPort,
