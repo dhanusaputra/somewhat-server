@@ -11,6 +11,7 @@ import (
 	"github.com/dhanusaputra/somewhat-server/pkg/logger"
 	"github.com/dhanusaputra/somewhat-server/pkg/protocol/rest/middleware"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/rs/cors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
@@ -32,11 +33,13 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 	fs := http.FileServer(http.Dir("./third_party/swagger-ui"))
 	mux.Handle("/swagger-ui/", http.StripPrefix("/swagger-ui/", fs))
 
+	handler := cors.Default().Handler(mux)
+
 	srv := &http.Server{
 		Addr: ":" + httpPort,
 		// add handler with middleware
 		Handler: middleware.AddRequestID(
-			middleware.AddLogger(logger.Log, mux)),
+			middleware.AddLogger(logger.Log, handler)),
 	}
 
 	// graceful shutdown

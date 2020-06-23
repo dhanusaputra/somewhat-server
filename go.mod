@@ -6,6 +6,7 @@ require (
 	github.com/golang/protobuf v1.4.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway v1.14.6
+	github.com/rs/cors v1.7.0
 	github.com/stretchr/testify v1.4.0
 	go.uber.org/zap v1.15.0
 	golang.org/x/mod v0.3.0 // indirect
