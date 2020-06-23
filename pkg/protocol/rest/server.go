@@ -33,13 +33,12 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 	fs := http.FileServer(http.Dir("./third_party/swagger-ui"))
 	mux.Handle("/swagger-ui/", http.StripPrefix("/swagger-ui/", fs))
 
-	handler := cors.Default().Handler(mux)
-
 	srv := &http.Server{
 		Addr: ":" + httpPort,
 		// add handler with middleware
-		Handler: middleware.AddRequestID(
-			middleware.AddLogger(logger.Log, handler)),
+		Handler: cors.Default().Handler(
+			middleware.AddRequestID(
+				middleware.AddLogger(logger.Log, mux))),
 	}
 
 	// graceful shutdown
