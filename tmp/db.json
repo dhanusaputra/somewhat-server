@@ -5,6 +5,10 @@
     },
     "en": {
         "nothing": "nothing personal here",
-        "something": "it is personal"
+        "something": "something personal here"
+    },
+    "ps": {
+        "nothing": "nothing p'rsonal h're",
+        "something": "something p'rsonal h're"
     }
 }
