@@ -11,6 +11,7 @@ import (
 	"github.com/dhanusaputra/somewhat-server/pkg/logger"
 	"github.com/dhanusaputra/somewhat-server/pkg/protocol/rest/middleware"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/cors"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -32,6 +33,8 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 
 	fs := http.FileServer(http.Dir("./third_party/swagger-ui"))
 	mux.Handle("/swagger-ui/", http.StripPrefix("/swagger-ui/", fs))
+
+	mux.Handle("/metrics", promhttp.Handler())
 
 	srv := &http.Server{
 		Addr: ":" + httpPort,
