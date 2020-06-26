@@ -1,4 +1,4 @@
-package certificate
+package cert
 
 import (
 	"crypto/tls"
@@ -12,16 +12,13 @@ var (
 	demoCertPool *x509.CertPool
 )
 
-// How to generate your own self-signed certificate:
-// openssl req -newkey rsa:2048 -nodes -keyout server.key -x509 -days 365 -out server.crt
-
 // GetCert returns a certicicate pair and pool
 func GetCert() (*tls.Certificate, *x509.CertPool) {
-	serverCrt, err := ioutil.ReadFile("certificate/server.crt")
+	serverCrt, err := ioutil.ReadFile("cert/server.pem")
 	if err != nil {
 		log.Fatal(err)
 	}
-	serverKey, err := ioutil.ReadFile("certificate/server.key")
+	serverKey, err := ioutil.ReadFile("cert/server.key")
 	if err != nil {
 		log.Fatal(err)
 	}
