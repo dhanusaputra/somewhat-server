@@ -30,8 +30,22 @@
               "$ref": "#/definitions/v1ListSomethingResponse"
             }
           },
+          "400": {
+            "description": "400 Bad Request",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
           "404": {
-            "description": "Returned when the resource does not exist.",
+            "description": "404 Not Found",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "500 Internal Server Error",
             "schema": {
               "type": "string",
               "format": "string"
@@ -66,8 +80,22 @@
               "$ref": "#/definitions/v1CreateSomethingResponse"
             }
           },
+          "400": {
+            "description": "400 Bad Request",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
           "404": {
-            "description": "Returned when the resource does not exist.",
+            "description": "404 Not Found",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "500 Internal Server Error",
             "schema": {
               "type": "string",
               "format": "string"
@@ -106,8 +134,22 @@
               "$ref": "#/definitions/v1GetSomethingResponse"
             }
           },
+          "400": {
+            "description": "400 Bad Request",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
           "404": {
-            "description": "Returned when the resource does not exist.",
+            "description": "404 Not Found",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "500 Internal Server Error",
             "schema": {
               "type": "string",
               "format": "string"
@@ -148,8 +190,22 @@
               "$ref": "#/definitions/v1DeleteSomethingResponse"
             }
           },
+          "400": {
+            "description": "400 Bad Request",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
           "404": {
-            "description": "Returned when the resource does not exist.",
+            "description": "404 Not Found",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "500 Internal Server Error",
             "schema": {
               "type": "string",
               "format": "string"
@@ -192,8 +248,22 @@
               "$ref": "#/definitions/v1UpdateSomethingResponse"
             }
           },
+          "400": {
+            "description": "400 Bad Request",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
           "404": {
-            "description": "Returned when the resource does not exist.",
+            "description": "404 Not Found",
+            "schema": {
+              "type": "string",
+              "format": "string"
+            }
+          },
+          "500": {
+            "description": "500 Internal Server Error",
             "schema": {
               "type": "string",
               "format": "string"
