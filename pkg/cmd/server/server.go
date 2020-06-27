@@ -61,7 +61,7 @@ func RunServer() error {
 		return fmt.Errorf("failed to initialize logger: %v", err)
 	}
 
-	data, err := jsonutil.ReadFile("./tmp/db.json")
+	data, err := jsonutil.ReadFile("./api/json/v1/db.json")
 	if err != nil {
 		return err
 	}
