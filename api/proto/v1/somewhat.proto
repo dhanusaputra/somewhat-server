@@ -157,3 +157,39 @@ message ListSomethingResponse{
     string api = 1;
     repeated Something somethings = 2;
 }
+
+// User ...
+service User {
+    // GetUser ...
+    rpc GetUser (GetUserRequest) returns (GetUserResponse){
+        option (google.api.http) = {
+            get: "/v1/user/{id}"
+        };
+    }
+    // ListUser ...
+    rpc ListUser (ListUserRequest) returns (ListUserResponse){
+        option (google.api.http) = {
+            get: "/v1/user"
+        };
+    }
+}
+
+message GetUserRequest{
+    string api = 1;
+    string id = 2;
+}
+
+message GetUserResponse{
+    string api = 1;
+    
+}
+
+message ListUserRequest{
+    string api = 1;
+
+}
+
+message ListUserResponse{
+    string api = 1;
+    
+}
