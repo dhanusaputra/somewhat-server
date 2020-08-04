@@ -10,5 +10,9 @@
     "ps": {
         "nothing": "thou shalt not find something personal here",
         "something": "thou shalt find something personal here"
+    },
+    "zh": {
+        "nothing": "这里没有什么私人的",
+        "something": "这里有些私人的东西"
     }
 }
