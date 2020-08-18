@@ -27,7 +27,6 @@ func NewServer(data map[string]interface{}) *Server {
 
 // GetSomething ...
 func (s *Server) GetSomething(ctx context.Context, req *v1.GetSomethingRequest) (*v1.GetSomethingResponse, error) {
-	// check if the API version requested by client is supported by server
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
@@ -49,7 +48,6 @@ func (s *Server) GetSomething(ctx context.Context, req *v1.GetSomethingRequest) 
 
 // CreateSomething ...
 func (s *Server) CreateSomething(ctx context.Context, req *v1.CreateSomethingRequest) (*v1.CreateSomethingResponse, error) {
-	// check if the API version requested by client is supported by server
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
@@ -73,7 +71,6 @@ func (s *Server) CreateSomething(ctx context.Context, req *v1.CreateSomethingReq
 
 // UpdateSomething ...
 func (s *Server) UpdateSomething(ctx context.Context, req *v1.UpdateSomethingRequest) (*v1.UpdateSomethingResponse, error) {
-	// check if the API version requested by client is supported by server
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
@@ -94,7 +91,6 @@ func (s *Server) UpdateSomething(ctx context.Context, req *v1.UpdateSomethingReq
 
 // DeleteSomething ...
 func (s *Server) DeleteSomething(ctx context.Context, req *v1.DeleteSomethingRequest) (*v1.DeleteSomethingResponse, error) {
-	// check if the API version requested by client is supported by server
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
@@ -110,7 +106,6 @@ func (s *Server) DeleteSomething(ctx context.Context, req *v1.DeleteSomethingReq
 
 // ListSomething ...
 func (s *Server) ListSomething(ctx context.Context, req *v1.ListSomethingRequest) (*v1.ListSomethingResponse, error) {
-	// check if the API version requested by client is supported by server
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
@@ -131,9 +126,7 @@ func (s *Server) ListSomething(ctx context.Context, req *v1.ListSomethingRequest
 	}, nil
 }
 
-// checkAPI checks if the API version requested by client is supported by server
 func (s *Server) checkAPI(api string) error {
-	// API version is "" means use current version of the service
 	if len(api) > 0 {
 		if apiVersion != api {
 			return status.Errorf(codes.Unimplemented,
