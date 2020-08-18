@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "somewhat",
+    "title": "user",
     "version": "1.0",
     "contact": {
       "name": "somewhat project",
@@ -19,65 +19,15 @@
     "application/json"
   ],
   "paths": {
-    "/v1/something": {
-      "get": {
-        "summary": "ListSomething ...",
-        "operationId": "Somewhat_ListSomething",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListSomethingResponse"
-            }
-          },
-          "400": {
-            "description": "400 Bad Request",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "404": {
-            "description": "404 Not Found",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "500": {
-            "description": "500 Internal Server Error",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "api",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Somewhat"
-        ]
-      },
+    "/v1/login": {
       "post": {
-        "summary": "CreateSomething ...",
-        "operationId": "Somewhat_CreateSomething",
+        "summary": "Login ...",
+        "operationId": "User_Login",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateSomethingResponse"
+              "$ref": "#/definitions/v1LoginResponse"
             }
           },
           "400": {
@@ -114,24 +64,24 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1CreateSomethingRequest"
+              "$ref": "#/definitions/v1LoginRequest"
             }
           }
         ],
         "tags": [
-          "Somewhat"
+          "User"
         ]
       }
     },
-    "/v1/something/{id}": {
+    "/v1/user": {
       "get": {
-        "summary": "GetSomething ...",
-        "operationId": "Somewhat_GetSomething",
+        "summary": "ListUser ...",
+        "operationId": "User_ListUser",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetSomethingResponse"
+              "$ref": "#/definitions/v1ListUserResponse"
             }
           },
           "400": {
@@ -164,12 +114,6 @@
         },
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
             "name": "api",
             "in": "query",
             "required": false,
@@ -177,75 +121,19 @@
           }
         ],
         "tags": [
-          "Somewhat"
-        ]
-      },
-      "delete": {
-        "summary": "DeleteSomething ...",
-        "operationId": "Somewhat_DeleteSomething",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1DeleteSomethingResponse"
-            }
-          },
-          "400": {
-            "description": "400 Bad Request",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "404": {
-            "description": "404 Not Found",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "500": {
-            "description": "500 Internal Server Error",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "api",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Somewhat"
+          "User"
         ]
       }
     },
-    "/v1/something/{something.id}": {
-      "put": {
-        "summary": "UpdateSomething ...",
-        "operationId": "Somewhat_UpdateSomething",
+    "/v1/user/{id}": {
+      "get": {
+        "summary": "GetUser ...",
+        "operationId": "User_GetUser",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1UpdateSomethingResponse"
+              "$ref": "#/definitions/v1GetUserResponse"
             }
           },
           "400": {
@@ -278,22 +166,20 @@
         },
         "parameters": [
           {
-            "name": "something.id",
+            "name": "id",
             "in": "path",
             "required": true,
             "type": "string"
           },
           {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1UpdateSomethingRequest"
-            }
+            "name": "api",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
-          "Somewhat"
+          "User"
         ]
       }
     }
@@ -335,113 +221,43 @@
         }
       }
     },
-    "v1CreateSomethingRequest": {
+    "v1GetUserResponse": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "type": "string"
+        }
+      }
+    },
+    "v1ListUserResponse": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "type": "string"
+        }
+      }
+    },
+    "v1LoginRequest": {
       "type": "object",
       "properties": {
         "api": {
           "type": "string"
         },
-        "something": {
-          "$ref": "#/definitions/v1Something"
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
         }
-      },
-      "description": "CreateSomethingRequest ..."
+      }
     },
-    "v1CreateSomethingResponse": {
+    "v1LoginResponse": {
       "type": "object",
       "properties": {
-        "api": {
-          "type": "string"
-        },
-        "id": {
+        "token": {
           "type": "string"
         }
-      },
-      "description": "CreateSomethingResponse ..."
-    },
-    "v1DeleteSomethingResponse": {
-      "type": "object",
-      "properties": {
-        "api": {
-          "type": "string"
-        },
-        "deleted": {
-          "type": "boolean",
-          "format": "boolean"
-        }
-      },
-      "description": "DeleteSomethingResponse ..."
-    },
-    "v1GetSomethingResponse": {
-      "type": "object",
-      "properties": {
-        "api": {
-          "type": "string"
-        },
-        "something": {
-          "$ref": "#/definitions/v1Something"
-        }
-      },
-      "description": "GetSomethingResponse ..."
-    },
-    "v1ListSomethingResponse": {
-      "type": "object",
-      "properties": {
-        "api": {
-          "type": "string"
-        },
-        "somethings": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Something"
-          }
-        }
-      },
-      "description": "ListSomethingResponse ..."
-    },
-    "v1Something": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      },
-      "description": "Something ..."
-    },
-    "v1UpdateSomethingRequest": {
-      "type": "object",
-      "properties": {
-        "api": {
-          "type": "string"
-        },
-        "something": {
-          "$ref": "#/definitions/v1Something"
-        }
-      },
-      "description": "UpdateSomethingRequest ..."
-    },
-    "v1UpdateSomethingResponse": {
-      "type": "object",
-      "properties": {
-        "api": {
-          "type": "string"
-        },
-        "updated": {
-          "type": "boolean",
-          "format": "boolean"
-        }
-      },
-      "description": "UpdateSomethingResponse ..."
+      }
     }
   }
 }

@@ -296,116 +296,6 @@
           "Somewhat"
         ]
       }
-    },
-    "/v1/user": {
-      "get": {
-        "summary": "ListUser ...",
-        "operationId": "User_ListUser",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1ListUserResponse"
-            }
-          },
-          "400": {
-            "description": "400 Bad Request",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "404": {
-            "description": "404 Not Found",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "500": {
-            "description": "500 Internal Server Error",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "api",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/v1/user/{id}": {
-      "get": {
-        "summary": "GetUser ...",
-        "operationId": "User_GetUser",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1GetUserResponse"
-            }
-          },
-          "400": {
-            "description": "400 Bad Request",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "404": {
-            "description": "404 Not Found",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "500": {
-            "description": "500 Internal Server Error",
-            "schema": {
-              "type": "string",
-              "format": "string"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "api",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "User"
-        ]
-      }
     }
   },
   "definitions": {
@@ -494,14 +384,6 @@
       },
       "description": "GetSomethingResponse ..."
     },
-    "v1GetUserResponse": {
-      "type": "object",
-      "properties": {
-        "api": {
-          "type": "string"
-        }
-      }
-    },
     "v1ListSomethingResponse": {
       "type": "object",
       "properties": {
@@ -516,14 +398,6 @@
         }
       },
       "description": "ListSomethingResponse ..."
-    },
-    "v1ListUserResponse": {
-      "type": "object",
-      "properties": {
-        "api": {
-          "type": "string"
-        }
-      }
     },
     "v1Something": {
       "type": "object",
