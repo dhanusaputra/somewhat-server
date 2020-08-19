@@ -167,10 +167,18 @@ message ListSomethingResponse{
 
 message LoginRequest{
     string api = 1;
-    string username = 2;
-    string password = 3;
+    User user = 2;
 }
 
 message LoginResponse{
-    string token = 1;
+    string api = 1;
+    string token = 2;
+}
+
+message User {
+    string id = 1;
+    string username = 2;
+    string password = 3;
+    google.protobuf.Timestamp createdAt = 4;
+    google.protobuf.Timestamp lastLoginAt = 5;
 }

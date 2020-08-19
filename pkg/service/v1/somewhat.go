@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 	"google.golang.org/grpc/codes"
@@ -127,6 +128,24 @@ func (s *Server) ListSomething(ctx context.Context, req *v1.ListSomethingRequest
 	return &v1.ListSomethingResponse{
 		Api:        apiVersion,
 		Somethings: res,
+	}, nil
+}
+
+// Login ...
+func (s *Server) Login(ctx context.Context, req *v1.LoginRequest) (*v1.LoginResponse, error) {
+	if err := s.checkAPI(req.Api); err != nil {
+		return nil, err
+	}
+	a := NewAuth("something", 30*time.Minute)
+	token, err := a.SignJWT(&v1.User{
+		Id: "1",
+	})
+	if err != nil {
+		return nil, status.Error(codes.Unknown, fmt.Sprintf("jwt failed, err: %v", err))
+	}
+	return &v1.LoginResponse{
+		Api:   apiVersion,
+		Token: token,
 	}, nil
 }
 

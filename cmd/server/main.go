@@ -5,6 +5,7 @@ import (
 	"os"
 
 	cmd "github.com/dhanusaputra/somewhat-server/pkg/cmd/server"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {

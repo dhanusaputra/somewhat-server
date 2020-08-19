@@ -459,17 +459,17 @@
         "api": {
           "type": "string"
         },
-        "username": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
+        "user": {
+          "$ref": "#/definitions/v1User"
         }
       }
     },
     "v1LoginResponse": {
       "type": "object",
       "properties": {
+        "api": {
+          "type": "string"
+        },
         "token": {
           "type": "string"
         }
@@ -518,6 +518,28 @@
         }
       },
       "description": "UpdateSomethingResponse ..."
+    },
+    "v1User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastLoginAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
     }
   }
 }
