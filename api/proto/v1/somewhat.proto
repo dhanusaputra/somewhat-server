@@ -89,6 +89,13 @@ service Somewhat {
             get: "/v1/something"
         };
     }
+    // Login ...
+    rpc Login (LoginRequest) returns (LoginResponse){
+        option (google.api.http) = {
+            post: "/v1/login"
+            body: "*"
+        };
+    }
 }
 
 // Something ...
@@ -156,4 +163,14 @@ message ListSomethingRequest {
 message ListSomethingResponse{
     string api = 1;
     repeated Something somethings = 2;
+}
+
+message LoginRequest{
+    string api = 1;
+    string username = 2;
+    string password = 3;
+}
+
+message LoginResponse{
+    string token = 1;
 }

@@ -66,7 +66,12 @@ func RunServer() error {
 		return err
 	}
 
-	v1API := v1.NewServer(data)
+	userData, err := jsonutil.ReadFile("./api/json/v1/user.json")
+	if err != nil {
+		return err
+	}
+
+	v1API := v1.NewServer(data.(map[string]interface{}), userData)
 
 	// run HTTP gateway
 	go func() {

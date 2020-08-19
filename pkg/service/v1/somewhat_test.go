@@ -15,11 +15,13 @@ var (
 		"en": map[string]interface{}{"mockEn": "mock"},
 		"in": make(chan int),
 	}
+
+	testUserData = map[string]interface{}{}
 )
 
 func TestGetSomething(t *testing.T) {
 	ctx := context.Background()
-	s := NewServer(testData)
+	s := NewServer(testData, testUserData)
 	type args struct {
 		ctx context.Context
 		req *v1.GetSomethingRequest
@@ -102,7 +104,7 @@ func TestGetSomething(t *testing.T) {
 
 func TestUpdateSomething(t *testing.T) {
 	ctx := context.Background()
-	s := NewServer(testData)
+	s := NewServer(testData, testUserData)
 	type args struct {
 		ctx context.Context
 		req *v1.UpdateSomethingRequest
@@ -283,7 +285,7 @@ func TestCreateSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewServer(testData)
+			s := NewServer(testData, testUserData)
 			defer func() {
 				testData = copyTestData
 			}()
@@ -366,7 +368,7 @@ func TestListSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewServer(tt.data)
+			s := NewServer(tt.data, testUserData)
 			got, err := s.ListSomething(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ListSomething() error = %v, wantErr %v", err, tt.wantErr)
@@ -432,7 +434,7 @@ func TestDeleteSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewServer(testData)
+			s := NewServer(testData, testUserData)
 			defer func() {
 				testData = copyTestData
 			}()

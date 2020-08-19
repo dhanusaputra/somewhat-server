@@ -9,7 +9,7 @@ func TestReadFile(t *testing.T) {
 	tests := []struct {
 		name    string
 		file    string
-		want    map[string]interface{}
+		want    interface{}
 		wantErr bool
 		mock    func()
 	}{

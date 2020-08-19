@@ -17,12 +17,16 @@ const (
 
 // Server ...
 type Server struct {
-	data map[string]interface{}
+	data     map[string]interface{}
+	userData interface{}
 }
 
 // NewServer ...
-func NewServer(data map[string]interface{}) *Server {
-	return &Server{data: data}
+func NewServer(data map[string]interface{}, userData interface{}) *Server {
+	return &Server{
+		data:     data,
+		userData: userData,
+	}
 }
 
 // GetSomething ...

@@ -11,12 +11,12 @@ type ioReader interface {
 }
 
 // ReadFile ...
-func ReadFile(path string) (map[string]interface{}, error) {
+func ReadFile(path string) (interface{}, error) {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	var res map[string]interface{}
+	var res interface{}
 	err = json.Unmarshal(b, &res)
 	if err != nil {
 		return nil, err

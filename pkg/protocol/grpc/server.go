@@ -28,6 +28,7 @@ func RunServer(ctx context.Context, v1API v1.SomewhatServer, port string) error 
 	// register service
 	server := grpc.NewServer(opts...)
 	v1.RegisterSomewhatServer(server, v1API)
+	v1.RegisterUserServer(server, v1API)
 
 	// graceful shutdown
 	c := make(chan os.Signal, 1)
