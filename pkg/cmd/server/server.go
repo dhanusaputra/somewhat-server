@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 
+	pb "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 	"github.com/dhanusaputra/somewhat-server/pkg/logger"
 	"github.com/dhanusaputra/somewhat-server/pkg/protocol/grpc"
 	"github.com/dhanusaputra/somewhat-server/pkg/protocol/rest"
@@ -61,12 +62,14 @@ func RunServer() error {
 		return fmt.Errorf("failed to initialize logger: %v", err)
 	}
 
-	data, err := jsonutil.ReadFile("./api/json/v1/db.json")
+	var data interface{}
+	err := jsonutil.ReadFile("./api/json/v1/db.json", &data)
 	if err != nil {
 		return err
 	}
 
-	userData, err := jsonutil.ReadFile("./api/json/v1/user.json")
+	var userData []pb.User
+	err = jsonutil.ReadFile("./api/json/v1/user.json", &userData)
 	if err != nil {
 		return err
 	}

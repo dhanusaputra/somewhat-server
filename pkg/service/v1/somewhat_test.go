@@ -16,7 +16,7 @@ var (
 		"in": make(chan int),
 	}
 
-	testUserData = map[string]interface{}{}
+	testUserData = []v1.User{}
 )
 
 func TestGetSomething(t *testing.T) {

@@ -8,6 +8,7 @@ import (
 
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 	"github.com/dhanusaputra/somewhat-server/util/auth"
+	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -19,11 +20,11 @@ const (
 // Server ...
 type Server struct {
 	data     map[string]interface{}
-	userData interface{}
+	userData []v1.User
 }
 
 // NewServer ...
-func NewServer(data map[string]interface{}, userData interface{}) *Server {
+func NewServer(data map[string]interface{}, userData []v1.User) *Server {
 	return &Server{
 		data:     data,
 		userData: userData,
@@ -136,8 +137,23 @@ func (s *Server) Login(ctx context.Context, req *v1.LoginRequest) (*v1.LoginResp
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
+	if req.User == nil {
+		return nil, status.Error(codes.InvalidArgument, "user is required")
+	}
+	curUser := &v1.User{}
+	for i := range s.userData {
+		if s.userData[i].Username == req.User.Username {
+			curUser = &s.userData[i]
+			break
+		}
+	}
+	err := bcrypt.CompareHashAndPassword([]byte(curUser.PasswordHash), []byte(req.User.Password))
+	if err != nil {
+		return nil, status.Error(codes.PermissionDenied, fmt.Sprintf("failed to login, err: %v", err))
+	}
 	token, err := auth.SignJWT(&v1.User{
-		Id: "1",
+		Id:        curUser.Id,
+		CreatedAt: curUser.CreatedAt,
 	})
 	if err != nil {
 		return nil, status.Error(codes.Unknown, fmt.Sprintf("failed to login, err: %v", err))

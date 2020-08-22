@@ -11,7 +11,7 @@ import (
 var (
 	key                        = []byte(os.Getenv("KEY"))
 	defaultExpiredTimeInMinute = 30 * time.Second
-	defaultAppName             = "someting"
+	defaultAppName             = "something"
 )
 
 // SignJWT ...

@@ -1,12 +1,12 @@
 [
     {
-        "id": 1,
+        "id": "1",
         "username": "admin",
-        "password": "admin"
+        "passwordHash": "$2a$10$afKJc5WAJQjpRVIaexExo.9FllPgW0t5i4bxLr0BAgRJBoQPQtJTS"
     },
     {
-        "id": 2,
+        "id": "2",
         "username": "user",
-        "password": "user"
+        "passwordHash": "$2a$10$imlGcUUCTMkB1vBxoZLpO.YjIdOyDpjqtGMG.bloUMTGp69/7C4Gq"
     }
 ]
