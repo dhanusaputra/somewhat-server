@@ -10,7 +10,10 @@ import (
 )
 
 var (
-	key                        = []byte(os.Getenv("KEY"))
+	key = []byte(os.Getenv("KEY"))
+)
+
+const (
 	defaultExpiredTimeInMinute = 1 * time.Minute
 	defaultAppName             = "something"
 )
