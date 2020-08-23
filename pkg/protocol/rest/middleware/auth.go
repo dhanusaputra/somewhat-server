@@ -21,10 +21,10 @@ const (
 )
 
 // AddAuth ...
-func AddAuth(h http.Handler) http.Handler {
+func AddAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !envutil.GetEnvAsBool("ENABLE_AUTH", defaultAuthEnable) || envutil.GetEnvAsMapBool("AUTH_METHOD_BLACKLIST", defaultAuthMethodBlacklist, ",")[r.Method] || envutil.GetEnvAsMapBool("AUTH_REQUESTURI_BLACKLIST", defaultAuthRequestURIBlacklist, ",")[r.RequestURI] {
-			h.ServeHTTP(w, r)
+			next.ServeHTTP(w, r)
 			return
 		}
 		authHeader := r.Header.Get("Authorization")
@@ -39,6 +39,6 @@ func AddAuth(h http.Handler) http.Handler {
 			w.Write([]byte(err.Error()))
 			return
 		}
-		h.ServeHTTP(w, r)
+		next.ServeHTTP(w, r)
 	})
 }

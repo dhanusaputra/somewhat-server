@@ -9,12 +9,12 @@ import (
 )
 
 // AddLogger ...
-func AddLogger(logger *zap.Logger, h http.Handler) http.Handler {
+func AddLogger(logger *zap.Logger, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
 		if r.Header.Get("X-Liveness-Probe") == "Healthz" {
-			h.ServeHTTP(w, r)
+			next.ServeHTTP(w, r)
 			return
 		}
 
@@ -45,7 +45,7 @@ func AddLogger(logger *zap.Logger, h http.Handler) http.Handler {
 
 		t1 := time.Now()
 
-		h.ServeHTTP(w, r)
+		next.ServeHTTP(w, r)
 
 		// Log HTTP response
 		logger.Debug("request completed",
