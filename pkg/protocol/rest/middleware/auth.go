@@ -8,10 +8,10 @@ import (
 )
 
 var (
-	defaultAuthMethodBlacklists = map[string]bool{
+	defaultAuthMethodBlacklist = map[string]bool{
 		"GET": true,
 	}
-	defaultAuthRequestURIBlacklists = map[string]bool{
+	defaultAuthRequestURIBlacklist = map[string]bool{
 		"/v1/login": true,
 	}
 )
@@ -23,7 +23,7 @@ const (
 // AddAuth ...
 func AddAuth(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !envutil.GetEnvAsBool("ENABLE_AUTH", defaultAuthEnable) || envutil.GetEnvAsMapBool("AUTH_METHOD_BLACKLISTS", defaultAuthMethodBlacklists, ",")[r.Method] || envutil.GetEnvAsMapBool("AUTH_REQUESTURI_BLACKLISTS", defaultAuthRequestURIBlacklists, ",")[r.RequestURI] {
+		if !envutil.GetEnvAsBool("ENABLE_AUTH", defaultAuthEnable) || envutil.GetEnvAsMapBool("AUTH_METHOD_BLACKLIST", defaultAuthMethodBlacklist, ",")[r.Method] || envutil.GetEnvAsMapBool("AUTH_REQUESTURI_BLACKLIST", defaultAuthRequestURIBlacklist, ",")[r.RequestURI] {
 			h.ServeHTTP(w, r)
 			return
 		}
