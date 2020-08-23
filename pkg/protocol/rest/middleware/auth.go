@@ -33,7 +33,7 @@ func AddAuth(h http.Handler) http.Handler {
 			w.Write([]byte("no authorization found in request"))
 			return
 		}
-		_, err := authutil.ValidateJWT(authHeader)
+		_, _, err := authutil.ValidateJWT(authHeader)
 		if err != nil {
 			w.WriteHeader(http.StatusForbidden)
 			w.Write([]byte(err.Error()))

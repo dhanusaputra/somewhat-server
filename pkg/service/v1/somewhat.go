@@ -7,7 +7,9 @@ import (
 	"strings"
 
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
+	"github.com/dhanusaputra/somewhat-server/pkg/logger"
 	"github.com/dhanusaputra/somewhat-server/util/authutil"
+	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -166,6 +168,32 @@ func (s *Server) Login(ctx context.Context, req *v1.LoginRequest) (*v1.LoginResp
 	return &v1.LoginResponse{
 		Api:   apiVersion,
 		Token: token,
+	}, nil
+}
+
+// Me ...
+func (s *Server) Me(ctx context.Context, req *v1.MeRequest) (*v1.MeResponse, error) {
+	if err := s.checkAPI(req.Api); err != nil {
+		return nil, err
+	}
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Error(codes.Unknown, "metadata is required")
+	}
+	auth := md.Get("authorization")
+	if len(auth) == 0 {
+		return nil, status.Error(codes.InvalidArgument, "authorization is required")
+	}
+	_, claims, err := authutil.ValidateJWT(md.Get("authorization")[0])
+	if err != nil {
+		logger.Log.Error("jwt invalid", zap.Any("err", err))
+	}
+	return &v1.MeResponse{
+		Api: apiVersion,
+		User: &v1.User{
+			Id:       claims["id"].(string),
+			Username: claims["username"].(string),
+		},
 	}, nil
 }
 

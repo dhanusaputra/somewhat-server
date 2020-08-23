@@ -74,14 +74,14 @@
       }
     },
     "/v1/me": {
-      "post": {
+      "get": {
         "summary": "Me ...",
         "operationId": "Somewhat_Me",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1LoginResponse"
+              "$ref": "#/definitions/v1MeResponse"
             }
           },
           "400": {
@@ -114,12 +114,10 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "properties": {}
-            }
+            "name": "api",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -526,6 +524,17 @@
         },
         "token": {
           "type": "string"
+        }
+      }
+    },
+    "v1MeResponse": {
+      "type": "object",
+      "properties": {
+        "api": {
+          "type": "string"
+        },
+        "user": {
+          "$ref": "#/definitions/v1User"
         }
       }
     },
