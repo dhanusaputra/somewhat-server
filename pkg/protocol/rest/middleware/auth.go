@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/dhanusaputra/somewhat-server/util/auth"
+	"github.com/dhanusaputra/somewhat-server/util/authutil"
 	"github.com/dhanusaputra/somewhat-server/util/envutil"
 )
 
@@ -33,7 +33,7 @@ func AddAuth(h http.Handler) http.Handler {
 			w.Write([]byte("no authorization found in request"))
 			return
 		}
-		_, err := auth.ValidateJWT(authHeader)
+		_, err := authutil.ValidateJWT(authHeader)
 		if err != nil {
 			w.WriteHeader(http.StatusForbidden)
 			w.Write([]byte(err.Error()))

@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
-	"github.com/dhanusaputra/somewhat-server/util/auth"
+	"github.com/dhanusaputra/somewhat-server/util/authutil"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -155,7 +155,7 @@ func (s *Server) Login(ctx context.Context, req *v1.LoginRequest) (*v1.LoginResp
 	if err != nil {
 		return nil, status.Error(codes.PermissionDenied, fmt.Sprintf("failed to login, err: %v", err))
 	}
-	token, err := auth.SignJWT(&v1.User{
+	token, err := authutil.SignJWT(&v1.User{
 		Id:        curUser.Id,
 		CreatedAt: curUser.CreatedAt,
 		Username:  curUser.Username,

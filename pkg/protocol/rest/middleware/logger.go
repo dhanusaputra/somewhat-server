@@ -8,14 +8,11 @@ import (
 	"go.uber.org/zap"
 )
 
-// AddLogger logs request/response pair
+// AddLogger ...
 func AddLogger(logger *zap.Logger, h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
-		// We do not want to be spammed by Kubernetes health check.
-		// Do not log Kubernetes health check.
-		// You can change this behavior as you wish.
 		if r.Header.Get("X-Liveness-Probe") == "Healthz" {
 			h.ServeHTTP(w, r)
 			return
@@ -23,7 +20,6 @@ func AddLogger(logger *zap.Logger, h http.Handler) http.Handler {
 
 		id := GetReqID(ctx)
 
-		// Prepare fields to log
 		var scheme string
 		if r.TLS != nil {
 			scheme = "https"
