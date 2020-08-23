@@ -27,7 +27,7 @@ func SignJWT(user *v1.User) (string, error) {
 		"exp":        time.Now().Add(defaultExpiredTimeInMinute).Unix(),
 		"iss":        defaultAppName,
 	})
-	return token.SignedString([]byte(key))
+	return token.SignedString(key)
 }
 
 // ValidateJWT ...
@@ -36,7 +36,7 @@ func ValidateJWT(tokenString string) (*jwt.Token, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(key), nil
+		return key, nil
 	})
 	return token, err
 }
