@@ -184,7 +184,7 @@ func (s *Server) Me(ctx context.Context, req *v1.MeRequest) (*v1.MeResponse, err
 	if len(auth) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "authorization is required")
 	}
-	_, claims, err := authutil.ValidateJWT(md.Get("authorization")[0])
+	_, claims, err := authutil.ValidateJWT(auth[0])
 	if err != nil {
 		logger.Log.Error("jwt invalid", zap.Any("err", err))
 	}
