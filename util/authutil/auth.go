@@ -5,6 +5,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/dhanusaputra/somewhat-server/util/envutil"
+
 	"github.com/dgrijalva/jwt-go"
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 )
@@ -14,7 +16,7 @@ var (
 )
 
 const (
-	defaultExpiredTimeInMinute = 1 * time.Minute
+	defaultExpiredTimeInMinute = 15 //mins
 	defaultAppName             = "something"
 )
 
@@ -24,7 +26,7 @@ func SignJWT(user *v1.User) (string, error) {
 		"id":         user.Id,
 		"username":   user.Username,
 		"created_at": user.CreatedAt,
-		"exp":        time.Now().Add(defaultExpiredTimeInMinute).Unix(),
+		"exp":        time.Now().Add(time.Duration(envutil.GetEnvAsInt("JWT_EXPIRED_TIME_IN_MINUTE", defaultExpiredTimeInMinute)) * time.Minute).Unix(),
 		"iss":        defaultAppName,
 	})
 	return token.SignedString(key)

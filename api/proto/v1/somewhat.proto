@@ -4,6 +4,7 @@ package v1;
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-swagger/options/annotations.proto";
+import "google/protobuf/empty.proto";
 
 option go_package = ".;v1";
 
@@ -96,6 +97,13 @@ service Somewhat {
             body: "*"
         };
     }
+    // Me ...
+    rpc Me (google.protobuf.Empty) returns (LoginResponse){
+        option (google.api.http) = {
+            post: "/v1/me"
+            body: "*"
+        };
+    }
 }
 
 // Something ...
@@ -182,4 +190,9 @@ message User {
     string passwordHash = 4;
     google.protobuf.Timestamp createdAt = 5;
     google.protobuf.Timestamp lastLoginAt = 6;
+}
+
+message MeResponse {
+    string api = 1;
+    User user = 2;
 }
