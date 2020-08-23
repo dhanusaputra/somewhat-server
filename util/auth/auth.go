@@ -11,7 +11,7 @@ import (
 
 var (
 	key                        = []byte(os.Getenv("KEY"))
-	defaultExpiredTimeInMinute = 30 * time.Second
+	defaultExpiredTimeInMinute = 1 * time.Minute
 	defaultAppName             = "something"
 )
 
@@ -19,11 +19,11 @@ var (
 func SignJWT(user *v1.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":         user.Id,
+		"username":   user.Username,
 		"created_at": user.CreatedAt,
-		"exp":        time.Now().Add(time.Second * defaultExpiredTimeInMinute).Unix(),
+		"exp":        time.Now().Add(defaultExpiredTimeInMinute).Unix(),
 		"iss":        defaultAppName,
 	})
-
 	return token.SignedString([]byte(key))
 }
 

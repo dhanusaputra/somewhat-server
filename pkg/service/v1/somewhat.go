@@ -10,6 +10,7 @@ import (
 	"github.com/dhanusaputra/somewhat-server/util/auth"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -115,6 +116,9 @@ func (s *Server) ListSomething(ctx context.Context, req *v1.ListSomethingRequest
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
+		fmt.Println(md)
+	}
 	res := make([]*v1.Something, 0, len(s.data))
 	for k, v := range s.data {
 		b, err := json.Marshal(v)
@@ -154,6 +158,7 @@ func (s *Server) Login(ctx context.Context, req *v1.LoginRequest) (*v1.LoginResp
 	token, err := auth.SignJWT(&v1.User{
 		Id:        curUser.Id,
 		CreatedAt: curUser.CreatedAt,
+		Username:  curUser.Username,
 	})
 	if err != nil {
 		return nil, status.Error(codes.Unknown, fmt.Sprintf("failed to login, err: %v", err))
