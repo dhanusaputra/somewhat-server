@@ -48,9 +48,9 @@ func GetEnvAsMapBool(key string, defaultVal map[string]bool, sep string) map[str
 		return defaultVal
 	}
 	vals := strings.Split(valStr, sep)
-	val := make(map[string]bool, len(vals))
+	valMap := make(map[string]bool, len(vals))
 	for i := range vals {
-		val[vals[i]] = true
+		valMap[vals[i]] = true
 	}
-	return val
+	return valMap
 }
