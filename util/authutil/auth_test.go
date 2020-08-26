@@ -3,6 +3,9 @@ package authutil
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
+	"github.com/dgrijalva/jwt-go"
 	pb "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 )
 
@@ -13,10 +16,19 @@ func TestSignJWT(t *testing.T) {
 		Password: "password",
 	}
 	tokenString, err := SignJWT(user)
-	if err != nil {
-		t.Errorf("error during signing JWT")
+	assert.Nil(t, err)
+	assert.NotNil(t, tokenString)
+}
+
+func TestValidateJWT(t *testing.T) {
+	tokenString := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkX2F0IjpudWxsLCJpZCI6IjEiLCJpc3MiOiJzb21ldGhpbmciLCJ1c2VybmFtZSI6InVzZXJuYW1lIn0.laPjiS5zWxCaihlGzYTI9jJ1lGuTWsTd4IJdEMgZwuc"
+	want := jwt.MapClaims{
+		"created_at": nil,
+		"id":         "1",
+		"iss":        "something",
+		"username":   "username",
 	}
-	if tokenString == "" {
-		t.Errorf("invalid JWT")
-	}
+	_, got, err := ValidateJWT(tokenString)
+	assert.Nil(t, err)
+	assert.Equal(t, want, got)
 }

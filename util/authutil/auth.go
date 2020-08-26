@@ -5,10 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/dhanusaputra/somewhat-server/util/envutil"
-
 	"github.com/dgrijalva/jwt-go"
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
+	"github.com/dhanusaputra/somewhat-server/util/envutil"
 )
 
 var (

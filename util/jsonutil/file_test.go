@@ -34,14 +34,15 @@ func TestReadFile(t *testing.T) {
 			if tt.mock != nil {
 				tt.mock()
 			}
-			got, err := ReadFile(tt.file)
+			var in interface{}
+			err := ReadFile(tt.file, &in)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ReadFile() error = %v, wantErr = %v", err, tt.wantErr)
+				t.Errorf("ReadFile() error = %v, wantErr %v", err, tt.wantErr)
+				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ReadFile() = %v, want = %v", got, tt.want)
+			if !reflect.DeepEqual(in, tt.want) {
+				t.Errorf("ReadFile() = %v, want = %v", in, tt.want)
 			}
 		})
 	}
-
 }

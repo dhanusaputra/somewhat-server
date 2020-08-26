@@ -7,7 +7,7 @@ import (
 )
 
 // GetEnv ...
-func GetEnv(key string, defaultVal string) string {
+var GetEnv = func(key string, defaultVal string) string {
 	if val, ok := os.LookupEnv(key); ok {
 		return val
 	}

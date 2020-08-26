@@ -2,13 +2,8 @@ package jsonutil
 
 import (
 	"encoding/json"
-	"io"
 	"io/ioutil"
 )
-
-type ioReader interface {
-	io.Reader
-}
 
 // ReadFile ...
 func ReadFile(path string, in interface{}) error {
