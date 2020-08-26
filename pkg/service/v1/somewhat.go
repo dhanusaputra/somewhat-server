@@ -118,9 +118,6 @@ func (s *Server) ListSomething(ctx context.Context, req *v1.ListSomethingRequest
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
-	if md, ok := metadata.FromIncomingContext(ctx); ok {
-		fmt.Println(md)
-	}
 	res := make([]*v1.Something, 0, len(s.data))
 	for k, v := range s.data {
 		b, err := json.Marshal(v)
