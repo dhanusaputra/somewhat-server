@@ -56,6 +56,11 @@ func TestGetEnvAsInt(t *testing.T) {
 				defaultVal: 1,
 			},
 			want: 1,
+			mock: func() {
+				GetEnv = func(key string, defaultVal string) string {
+					return ""
+				}
+			},
 		},
 		{
 			name: "happy path",
@@ -102,6 +107,11 @@ func TestGetEnvAsBool(t *testing.T) {
 				defaultVal: true,
 			},
 			want: true,
+			mock: func() {
+				GetEnv = func(key string, defaultVal string) string {
+					return ""
+				}
+			},
 		},
 		{
 			name: "happy path",
