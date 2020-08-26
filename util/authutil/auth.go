@@ -20,7 +20,7 @@ const (
 )
 
 // SignJWT ...
-func SignJWT(user *v1.User) (string, error) {
+var SignJWT = func(user *v1.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":         user.Id,
 		"username":   user.Username,

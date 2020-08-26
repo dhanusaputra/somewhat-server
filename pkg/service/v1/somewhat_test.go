@@ -2,10 +2,12 @@ package v1
 
 import (
 	"context"
+	"errors"
 	"reflect"
 	"testing"
 
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
+	"github.com/dhanusaputra/somewhat-server/util/authutil"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,7 +18,12 @@ var (
 		"in": make(chan int),
 	}
 
-	testUserData = []v1.User{}
+	testUserData = []v1.User{
+		v1.User{
+			Username:     "username",
+			PasswordHash: "$2y$10$e2d/bL85VdUak2nyPdQA/uGUW6p6s1iT4Q5lPdU00slPvp6wddssO",
+		},
+	}
 )
 
 func TestGetSomething(t *testing.T) {
@@ -445,6 +452,176 @@ func TestDeleteSomething(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("DeleteSomething() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestLogin(t *testing.T) {
+	ctx := context.Background()
+	type args struct {
+		ctx context.Context
+		req *v1.LoginRequest
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *v1.LoginResponse
+		wantErr bool
+		mock    func()
+	}{
+		{
+			name: "happy path",
+			args: args{
+				ctx: ctx,
+				req: &v1.LoginRequest{
+					Api: "v1",
+					User: &v1.User{
+						Username: "username",
+						Password: "password",
+					},
+				},
+			},
+			want: &v1.LoginResponse{
+				Api:   "v1",
+				Token: "mockToken",
+			},
+			mock: func() {
+				authutil.SignJWT = func(user *v1.User) (string, error) {
+					return "mockToken", nil
+				}
+			},
+		},
+		{
+			name: "user nill",
+			args: args{
+				ctx: ctx,
+				req: &v1.LoginRequest{
+					Api:  "v1",
+					User: nil,
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "unsupported API",
+			args: args{
+				ctx: ctx,
+				req: &v1.LoginRequest{
+					Api:  "v2",
+					User: &v1.User{},
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "bcrypt failed",
+			args: args{
+				ctx: ctx,
+				req: &v1.LoginRequest{
+					Api: "v1",
+					User: &v1.User{
+						Username: "username",
+						Password: "password2",
+					},
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "signJWT failed",
+			args: args{
+				ctx: ctx,
+				req: &v1.LoginRequest{
+					Api: "v1",
+					User: &v1.User{
+						Username: "username",
+						Password: "password",
+					},
+				},
+			},
+			wantErr: true,
+			mock: func() {
+				authutil.SignJWT = func(user *v1.User) (string, error) {
+					return "", errors.New("err")
+				}
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tmp := &authutil.SignJWT
+			defer func() {
+				authutil.SignJWT = *tmp
+			}()
+			if tt.mock != nil {
+				tt.mock()
+			}
+			s := NewServer(testData, testUserData)
+			got, err := s.Login(tt.args.ctx, tt.args.req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Login() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Login() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMe(t *testing.T) {
+	ctx := context.Background()
+	copyTestData := make(map[string]interface{}, len(testData))
+	for k, v := range testData {
+		copyTestData[k] = v
+	}
+	type args struct {
+		ctx context.Context
+		req *v1.MeRequest
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *v1.MeResponse
+		wantErr bool
+	}{
+		{
+			name: "happy path",
+			args: args{
+				ctx: ctx,
+				req: &v1.MeRequest{
+					Api: "v1",
+				},
+			},
+			want: &v1.MeResponse{
+				Api: "v1",
+			},
+		},
+		{
+			name: "unsupported API",
+			args: args{
+				ctx: ctx,
+				req: &v1.MeRequest{
+					Api: "v2",
+				},
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := NewServer(testData, testUserData)
+			defer func() {
+				testData = copyTestData
+			}()
+			got, err := s.Me(tt.args.ctx, tt.args.req)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Me() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Me() = %v, want %v", got, tt.want)
 			}
 		})
 	}
