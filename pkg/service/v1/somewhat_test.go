@@ -6,9 +6,11 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/dgrijalva/jwt-go"
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 	"github.com/dhanusaputra/somewhat-server/util/authutil"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/grpc/metadata"
 )
 
 var (
@@ -571,11 +573,10 @@ func TestLogin(t *testing.T) {
 }
 
 func TestMe(t *testing.T) {
-	ctx := context.Background()
-	copyTestData := make(map[string]interface{}, len(testData))
-	for k, v := range testData {
-		copyTestData[k] = v
-	}
+	md := metadata.New(map[string]string{"authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkX2F0IjpudWxsLCJpZCI6IjEiLCJpc3MiOiJzb21ldGhpbmciLCJ1c2VybmFtZSI6InVzZXJuYW1lIn0.laPjiS5zWxCaihlGzYTI9jJ1lGuTWsTd4IJdEMgZwuc"})
+	ctx := metadata.NewIncomingContext(context.Background(), md)
+	md = metadata.New(map[string]string{"authorization": ""})
+	ctxEmpty := metadata.NewIncomingContext(context.Background(), md)
 	type args struct {
 		ctx context.Context
 		req *v1.MeRequest
@@ -585,6 +586,7 @@ func TestMe(t *testing.T) {
 		args    args
 		want    *v1.MeResponse
 		wantErr bool
+		mock    func()
 	}{
 		{
 			name: "happy path",
@@ -596,6 +598,10 @@ func TestMe(t *testing.T) {
 			},
 			want: &v1.MeResponse{
 				Api: "v1",
+				User: &v1.User{
+					Id:       "1",
+					Username: "username",
+				},
 			},
 		},
 		{
@@ -608,13 +614,57 @@ func TestMe(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		{
+			name: "metadata empty",
+			args: args{
+				ctx: context.Background(),
+				req: &v1.MeRequest{
+					Api: "v1",
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "authorization empty",
+			args: args{
+				ctx: ctxEmpty,
+				req: &v1.MeRequest{
+					Api: "v1",
+				},
+			},
+			wantErr: true,
+		},
+		{
+			name: "jwt invalid",
+			args: args{
+				ctx: ctx,
+				req: &v1.MeRequest{
+					Api: "v1",
+				},
+			},
+			wantErr: true,
+			mock: func() {
+				authutil.ValidateJWT = func(tokenString string) (*jwt.Token, jwt.MapClaims, error) {
+					return nil, jwt.MapClaims{
+						"created_at": nil,
+						"id":         "1",
+						"iss":        "something",
+						"username":   "username",
+					}, errors.New("err")
+				}
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewServer(testData, testUserData)
+			tmp := &authutil.ValidateJWT
 			defer func() {
-				testData = copyTestData
+				authutil.ValidateJWT = *tmp
 			}()
+			if tt.mock != nil {
+				tt.mock()
+			}
+			s := NewServer(testData, testUserData)
 			got, err := s.Me(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Me() error = %v, wantErr %v", err, tt.wantErr)

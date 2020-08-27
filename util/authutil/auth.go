@@ -32,7 +32,7 @@ var SignJWT = func(user *v1.User) (string, error) {
 }
 
 // ValidateJWT ...
-func ValidateJWT(tokenString string) (*jwt.Token, jwt.MapClaims, error) {
+var ValidateJWT = func(tokenString string) (*jwt.Token, jwt.MapClaims, error) {
 	claims := jwt.MapClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
