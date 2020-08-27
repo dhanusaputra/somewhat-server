@@ -642,7 +642,13 @@ func TestMe(t *testing.T) {
 					Api: "v1",
 				},
 			},
-			wantErr: true,
+			want: &v1.MeResponse{
+				Api: "v1",
+				User: &v1.User{
+					Id:       "1",
+					Username: "username",
+				},
+			},
 			mock: func() {
 				authutil.ValidateJWT = func(tokenString string) (*jwt.Token, jwt.MapClaims, error) {
 					return nil, jwt.MapClaims{
@@ -657,10 +663,6 @@ func TestMe(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tmp := &authutil.ValidateJWT
-			defer func() {
-				authutil.ValidateJWT = *tmp
-			}()
 			if tt.mock != nil {
 				tt.mock()
 			}

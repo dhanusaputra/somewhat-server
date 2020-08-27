@@ -4,12 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
-	"github.com/dhanusaputra/somewhat-server/pkg/logger"
 	"github.com/dhanusaputra/somewhat-server/util/authutil"
-	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -183,7 +182,7 @@ func (s *Server) Me(ctx context.Context, req *v1.MeRequest) (*v1.MeResponse, err
 	}
 	_, claims, err := authutil.ValidateJWT(auth[0])
 	if err != nil {
-		logger.Log.Error("jwt invalid", zap.Any("err", err))
+		log.Print(err.Error())
 	}
 	return &v1.MeResponse{
 		Api: apiVersion,
