@@ -9,6 +9,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 	"github.com/dhanusaputra/somewhat-server/util/authutil"
+	"github.com/dhanusaputra/somewhat-server/util/testutil"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/metadata"
 )
@@ -552,9 +553,8 @@ func TestLogin(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tmp := &authutil.SignJWT
 			defer func() {
-				authutil.SignJWT = *tmp
+				testutil.Origins([]interface{}{&authutil.SignJWT})
 			}()
 			if tt.mock != nil {
 				tt.mock()
@@ -663,9 +663,8 @@ func TestMe(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tmp := &authutil.ValidateJWT
 			defer func() {
-				authutil.ValidateJWT = *tmp
+				testutil.Origins([]interface{}{&authutil.ValidateJWT})
 			}()
 			if tt.mock != nil {
 				tt.mock()
