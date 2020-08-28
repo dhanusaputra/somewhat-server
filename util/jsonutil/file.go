@@ -6,7 +6,7 @@ import (
 )
 
 // ReadFile ...
-func ReadFile(path string, in interface{}) error {
+var ReadFile = func(path string, in interface{}) error {
 	b, err := ioutil.ReadFile(path)
 	if err != nil {
 		return err

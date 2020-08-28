@@ -11,7 +11,6 @@ func TestReadFile(t *testing.T) {
 		file    string
 		want    interface{}
 		wantErr bool
-		mock    func()
 	}{
 		{
 			name: "happy path",
@@ -31,9 +30,6 @@ func TestReadFile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.mock != nil {
-				tt.mock()
-			}
 			var in interface{}
 			err := ReadFile(tt.file, &in)
 			if (err != nil) != tt.wantErr {
