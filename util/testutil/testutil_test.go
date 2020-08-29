@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestOrigins(t *testing.T) {
+func TestRestore(t *testing.T) {
 	var testFunc = func() bool {
 		return true
 	}

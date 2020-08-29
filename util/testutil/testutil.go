@@ -3,9 +3,9 @@ package testutil
 import "reflect"
 
 type ptrStruct struct {
-	ptr         interface{}
-	oriFunc     interface{}
-	oriFuncType reflect.Type
+	ptr     interface{}
+	ori     interface{}
+	oriType reflect.Type
 }
 type ptrs struct {
 	ptrs []ptrStruct
@@ -21,9 +21,9 @@ func NewPtrs(ins []interface{}) TearDownInterface {
 	outs := make([]ptrStruct, 0, len(ins))
 	for _, in := range ins {
 		outs = append(outs, ptrStruct{
-			ptr:         in,
-			oriFunc:     reflect.ValueOf(in).Elem().Interface(),
-			oriFuncType: reflect.ValueOf(in).Elem().Type(),
+			ptr:     in,
+			ori:     reflect.ValueOf(in).Elem().Interface(),
+			oriType: reflect.ValueOf(in).Elem().Type(),
 		})
 	}
 	return &ptrs{ptrs: outs}
@@ -32,10 +32,10 @@ func NewPtrs(ins []interface{}) TearDownInterface {
 // Restore ...
 func (p *ptrs) Restore() {
 	for _, ptrStruct := range p.ptrs {
-		if ptrStruct.oriFunc == nil {
-			reflect.ValueOf(ptrStruct.ptr).Elem().Set(reflect.Zero(ptrStruct.oriFuncType))
+		if ptrStruct.ori == nil {
+			reflect.ValueOf(ptrStruct.ptr).Elem().Set(reflect.Zero(ptrStruct.oriType))
 		} else {
-			reflect.ValueOf(ptrStruct.ptr).Elem().Set(reflect.ValueOf(ptrStruct.oriFunc))
+			reflect.ValueOf(ptrStruct.ptr).Elem().Set(reflect.ValueOf(ptrStruct.ori))
 		}
 	}
 }
