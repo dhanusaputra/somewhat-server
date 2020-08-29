@@ -8,7 +8,7 @@ type ptr struct {
 	oriFuncType reflect.Type
 }
 type ptrs struct {
-	ptrs []*ptr
+	ptrs []ptr
 }
 
 // TearDownInterface ...
@@ -18,9 +18,9 @@ type TearDownInterface interface {
 
 // NewPtrs ...
 func NewPtrs(ins []interface{}) TearDownInterface {
-	outs := make([]*ptr, 0, len(ins))
+	outs := make([]ptr, 0, len(ins))
 	for _, in := range ins {
-		outs = append(outs, &ptr{
+		outs = append(outs, ptr{
 			ptr:         in,
 			oriFunc:     reflect.ValueOf(in).Elem().Interface(),
 			oriFuncType: reflect.ValueOf(in).Elem().Type(),
