@@ -100,6 +100,7 @@ func TestGetSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			defer testutil.NewPtrs([]interface{}{&testData, &testUserData}).Restore()
 			got, err := s.GetSomething(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetSomething() error = %v, wantErr %v", err, tt.wantErr)
@@ -114,21 +115,18 @@ func TestGetSomething(t *testing.T) {
 
 func TestUpdateSomething(t *testing.T) {
 	ctx := context.Background()
-	s := NewServer(testData, testUserData)
 	type args struct {
 		ctx context.Context
 		req *v1.UpdateSomethingRequest
 	}
 	tests := []struct {
 		name    string
-		s       v1.SomewhatServer
 		args    args
 		want    *v1.UpdateSomethingResponse
 		wantErr bool
 	}{
 		{
 			name: "happy path",
-			s:    s,
 			args: args{
 				ctx: ctx,
 				req: &v1.UpdateSomethingRequest{
@@ -146,7 +144,6 @@ func TestUpdateSomething(t *testing.T) {
 		},
 		{
 			name: "unsupported API",
-			s:    s,
 			args: args{
 				ctx: ctx,
 				req: &v1.UpdateSomethingRequest{
@@ -161,7 +158,6 @@ func TestUpdateSomething(t *testing.T) {
 		},
 		{
 			name: "find ID failed",
-			s:    s,
 			args: args{
 				ctx: ctx,
 				req: &v1.UpdateSomethingRequest{
@@ -176,7 +172,6 @@ func TestUpdateSomething(t *testing.T) {
 		},
 		{
 			name: "unmarshal failed",
-			s:    s,
 			args: args{
 				ctx: ctx,
 				req: &v1.UpdateSomethingRequest{
@@ -192,6 +187,8 @@ func TestUpdateSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			defer testutil.NewPtrs([]interface{}{&testData, &testUserData}).Restore()
+			s := NewServer(testData, testUserData)
 			got, err := s.UpdateSomething(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("UpdateSomething() error = %v, wantErr %v", err, tt.wantErr)
@@ -206,10 +203,6 @@ func TestUpdateSomething(t *testing.T) {
 
 func TestCreateSomething(t *testing.T) {
 	ctx := context.Background()
-	copyTestData := make(map[string]interface{}, len(testData))
-	for k, v := range testData {
-		copyTestData[k] = v
-	}
 	type args struct {
 		ctx context.Context
 		req *v1.CreateSomethingRequest
@@ -285,7 +278,7 @@ func TestCreateSomething(t *testing.T) {
 				req: &v1.CreateSomethingRequest{
 					Api: "v1",
 					Something: &v1.Something{
-						Id:          "ps",
+						Id:          "invalid",
 						Description: "invalid",
 					},
 				},
@@ -295,10 +288,8 @@ func TestCreateSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			defer testutil.NewPtrs([]interface{}{&testData, &testUserData}).Restore()
 			s := NewServer(testData, testUserData)
-			defer func() {
-				testData = copyTestData
-			}()
 			got, err := s.CreateSomething(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("CreateSomething() error = %v, wantErr %v", err, tt.wantErr)
@@ -391,10 +382,6 @@ func TestListSomething(t *testing.T) {
 
 func TestDeleteSomething(t *testing.T) {
 	ctx := context.Background()
-	copyTestData := make(map[string]interface{}, len(testData))
-	for k, v := range testData {
-		copyTestData[k] = v
-	}
 	type args struct {
 		ctx context.Context
 		req *v1.DeleteSomethingRequest
@@ -436,7 +423,7 @@ func TestDeleteSomething(t *testing.T) {
 				ctx: ctx,
 				req: &v1.DeleteSomethingRequest{
 					Api: "v1",
-					Id:  "ps",
+					Id:  "id",
 				},
 			},
 			wantErr: true,
@@ -444,10 +431,8 @@ func TestDeleteSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			defer testutil.NewPtrs([]interface{}{&testData, &testUserData}).Restore()
 			s := NewServer(testData, testUserData)
-			defer func() {
-				testData = copyTestData
-			}()
 			got, err := s.DeleteSomething(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("DeleteSomething() error = %v, wantErr %v", err, tt.wantErr)
@@ -554,10 +539,10 @@ func TestLogin(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			defer testutil.NewPtrs([]interface{}{&authutil.SignJWT}).Restore()
+			s := NewServer(testData, testUserData)
 			if tt.mock != nil {
 				tt.mock()
 			}
-			s := NewServer(testData, testUserData)
 			got, err := s.Login(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Login() error = %v, wantErr %v", err, tt.wantErr)
@@ -662,10 +647,10 @@ func TestMe(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			defer testutil.NewPtrs([]interface{}{&authutil.ValidateJWT}).Restore()
+			s := NewServer(testData, testUserData)
 			if tt.mock != nil {
 				tt.mock()
 			}
-			s := NewServer(testData, testUserData)
 			got, err := s.Me(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Me() error = %v, wantErr %v", err, tt.wantErr)
