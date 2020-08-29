@@ -553,7 +553,7 @@ func TestLogin(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer testutil.Origins([]interface{}{&authutil.SignJWT})
+			defer testutil.NewPtrs([]interface{}{&authutil.SignJWT}).Restore()
 			if tt.mock != nil {
 				tt.mock()
 			}
@@ -661,7 +661,7 @@ func TestMe(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer testutil.Origins([]interface{}{&authutil.ValidateJWT})
+			defer testutil.NewPtrs([]interface{}{&authutil.ValidateJWT}).Restore()
 			if tt.mock != nil {
 				tt.mock()
 			}

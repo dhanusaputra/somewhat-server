@@ -11,7 +11,7 @@ func TestOrigins(t *testing.T) {
 		return true
 	}
 	func() {
-		defer Origins([]interface{}{&testFunc})
+		defer NewPtrs([]interface{}{&testFunc}).Restore()
 		testFunc = func() bool {
 			return false
 		}

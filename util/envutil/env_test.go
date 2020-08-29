@@ -3,6 +3,8 @@ package envutil
 import (
 	"reflect"
 	"testing"
+
+	"github.com/dhanusaputra/somewhat-server/util/testutil"
 )
 
 func TestGetEnv(t *testing.T) {
@@ -27,6 +29,7 @@ func TestGetEnv(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			defer testutil.NewPtrs([]interface{}{&GetEnv}).Restore()
 			if tt.mock != nil {
 				tt.mock()
 			}
@@ -78,6 +81,7 @@ func TestGetEnvAsInt(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			defer testutil.NewPtrs([]interface{}{&GetEnv}).Restore()
 			if tt.mock != nil {
 				tt.mock()
 			}
@@ -129,6 +133,7 @@ func TestGetEnvAsBool(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			defer testutil.NewPtrs([]interface{}{&GetEnv}).Restore()
 			if tt.mock != nil {
 				tt.mock()
 			}
@@ -180,6 +185,7 @@ func TestGetEnvAsSlice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			defer testutil.NewPtrs([]interface{}{&GetEnv}).Restore()
 			if tt.mock != nil {
 				tt.mock()
 			}
@@ -231,6 +237,7 @@ func TestGetEnvAsMapBool(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			defer testutil.NewPtrs([]interface{}{&GetEnv}).Restore()
 			if tt.mock != nil {
 				tt.mock()
 			}
