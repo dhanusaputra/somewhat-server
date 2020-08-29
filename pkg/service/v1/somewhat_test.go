@@ -10,6 +10,7 @@ import (
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 	"github.com/dhanusaputra/somewhat-server/util/authutil"
 	"github.com/dhanusaputra/somewhat-server/util/testutil"
+	"github.com/mohae/deepcopy"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/metadata"
 )
@@ -31,21 +32,18 @@ var (
 
 func TestGetSomething(t *testing.T) {
 	ctx := context.Background()
-	s := NewServer(testData, testUserData)
 	type args struct {
 		ctx context.Context
 		req *v1.GetSomethingRequest
 	}
 	tests := []struct {
 		name    string
-		s       v1.SomewhatServer
 		args    args
 		want    *v1.GetSomethingResponse
 		wantErr bool
 	}{
 		{
 			name: "happy path",
-			s:    s,
 			args: args{
 				ctx: ctx,
 				req: &v1.GetSomethingRequest{
@@ -63,7 +61,6 @@ func TestGetSomething(t *testing.T) {
 		},
 		{
 			name: "unsupported API",
-			s:    s,
 			args: args{
 				ctx: ctx,
 				req: &v1.GetSomethingRequest{
@@ -75,7 +72,6 @@ func TestGetSomething(t *testing.T) {
 		},
 		{
 			name: "find ID failed",
-			s:    s,
 			args: args{
 				ctx: ctx,
 				req: &v1.GetSomethingRequest{
@@ -87,7 +83,6 @@ func TestGetSomething(t *testing.T) {
 		},
 		{
 			name: "marshal failed",
-			s:    s,
 			args: args{
 				ctx: ctx,
 				req: &v1.GetSomethingRequest{
@@ -100,7 +95,7 @@ func TestGetSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer testutil.NewPtrs([]interface{}{&testData, &testUserData}).Restore()
+			s := NewServer(deepcopy.Copy(testData).(map[string]interface{}), deepcopy.Copy(testUserData).([]v1.User))
 			got, err := s.GetSomething(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetSomething() error = %v, wantErr %v", err, tt.wantErr)
@@ -187,8 +182,7 @@ func TestUpdateSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer testutil.NewPtrs([]interface{}{&testData, &testUserData}).Restore()
-			s := NewServer(testData, testUserData)
+			s := NewServer(deepcopy.Copy(testData).(map[string]interface{}), deepcopy.Copy(testUserData).([]v1.User))
 			got, err := s.UpdateSomething(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("UpdateSomething() error = %v, wantErr %v", err, tt.wantErr)
@@ -288,8 +282,7 @@ func TestCreateSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer testutil.NewPtrs([]interface{}{&testData, &testUserData}).Restore()
-			s := NewServer(testData, testUserData)
+			s := NewServer(deepcopy.Copy(testData).(map[string]interface{}), deepcopy.Copy(testUserData).([]v1.User))
 			got, err := s.CreateSomething(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("CreateSomething() error = %v, wantErr %v", err, tt.wantErr)
@@ -369,7 +362,7 @@ func TestListSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewServer(tt.data, testUserData)
+			s := NewServer(tt.data, deepcopy.Copy(testUserData).([]v1.User))
 			got, err := s.ListSomething(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ListSomething() error = %v, wantErr %v", err, tt.wantErr)
@@ -423,7 +416,7 @@ func TestDeleteSomething(t *testing.T) {
 				ctx: ctx,
 				req: &v1.DeleteSomethingRequest{
 					Api: "v1",
-					Id:  "id",
+					Id:  "ps",
 				},
 			},
 			wantErr: true,
@@ -431,8 +424,7 @@ func TestDeleteSomething(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer testutil.NewPtrs([]interface{}{&testData, &testUserData}).Restore()
-			s := NewServer(testData, testUserData)
+			s := NewServer(deepcopy.Copy(testData).(map[string]interface{}), deepcopy.Copy(testUserData).([]v1.User))
 			got, err := s.DeleteSomething(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("DeleteSomething() error = %v, wantErr %v", err, tt.wantErr)
@@ -539,7 +531,7 @@ func TestLogin(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			defer testutil.NewPtrs([]interface{}{&authutil.SignJWT}).Restore()
-			s := NewServer(testData, testUserData)
+			s := NewServer(deepcopy.Copy(testData).(map[string]interface{}), deepcopy.Copy(testUserData).([]v1.User))
 			if tt.mock != nil {
 				tt.mock()
 			}
@@ -647,7 +639,7 @@ func TestMe(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			defer testutil.NewPtrs([]interface{}{&authutil.ValidateJWT}).Restore()
-			s := NewServer(testData, testUserData)
+			s := NewServer(deepcopy.Copy(testData).(map[string]interface{}), deepcopy.Copy(testUserData).([]v1.User))
 			if tt.mock != nil {
 				tt.mock()
 			}
