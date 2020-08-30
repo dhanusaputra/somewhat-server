@@ -7,7 +7,7 @@ import (
 )
 
 func TestRestore(t *testing.T) {
-	var testFunc = func() bool {
+	testFunc := func() bool {
 		return true
 	}
 	func() {
