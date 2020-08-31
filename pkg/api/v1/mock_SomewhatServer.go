@@ -105,6 +105,52 @@ func (_m *MockSomewhatServer) ListSomething(_a0 context.Context, _a1 *ListSometh
 	return r0, r1
 }
 
+// Login provides a mock function with given fields: _a0, _a1
+func (_m *MockSomewhatServer) Login(_a0 context.Context, _a1 *LoginRequest) (*LoginResponse, error) {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 *LoginResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *LoginRequest) *LoginResponse); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*LoginResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *LoginRequest) error); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Me provides a mock function with given fields: _a0, _a1
+func (_m *MockSomewhatServer) Me(_a0 context.Context, _a1 *MeRequest) (*MeResponse, error) {
+	ret := _m.Called(_a0, _a1)
+
+	var r0 *MeResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *MeRequest) *MeResponse); ok {
+		r0 = rf(_a0, _a1)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*MeResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *MeRequest) error); ok {
+		r1 = rf(_a0, _a1)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // UpdateSomething provides a mock function with given fields: _a0, _a1
 func (_m *MockSomewhatServer) UpdateSomething(_a0 context.Context, _a1 *UpdateSomethingRequest) (*UpdateSomethingResponse, error) {
 	ret := _m.Called(_a0, _a1)

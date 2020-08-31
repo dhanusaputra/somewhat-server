@@ -135,6 +135,66 @@ func (_m *MockSomewhatClient) ListSomething(ctx context.Context, in *ListSomethi
 	return r0, r1
 }
 
+// Login provides a mock function with given fields: ctx, in, opts
+func (_m *MockSomewhatClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+	_va := make([]interface{}, len(opts))
+	for _i := range opts {
+		_va[_i] = opts[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, in)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *LoginResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *LoginRequest, ...grpc.CallOption) *LoginResponse); ok {
+		r0 = rf(ctx, in, opts...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*LoginResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *LoginRequest, ...grpc.CallOption) error); ok {
+		r1 = rf(ctx, in, opts...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Me provides a mock function with given fields: ctx, in, opts
+func (_m *MockSomewhatClient) Me(ctx context.Context, in *MeRequest, opts ...grpc.CallOption) (*MeResponse, error) {
+	_va := make([]interface{}, len(opts))
+	for _i := range opts {
+		_va[_i] = opts[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, in)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *MeResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *MeRequest, ...grpc.CallOption) *MeResponse); ok {
+		r0 = rf(ctx, in, opts...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*MeResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *MeRequest, ...grpc.CallOption) error); ok {
+		r1 = rf(ctx, in, opts...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // UpdateSomething provides a mock function with given fields: ctx, in, opts
 func (_m *MockSomewhatClient) UpdateSomething(ctx context.Context, in *UpdateSomethingRequest, opts ...grpc.CallOption) (*UpdateSomethingResponse, error) {
 	_va := make([]interface{}, len(opts))
