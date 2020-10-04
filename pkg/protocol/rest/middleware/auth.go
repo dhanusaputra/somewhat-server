@@ -7,6 +7,10 @@ import (
 	"github.com/dhanusaputra/somewhat-server/util/envutil"
 )
 
+const (
+	defaultAuthEnable = true
+)
+
 var (
 	defaultAuthMethodBlacklist = map[string]bool{
 		"GET": true,
@@ -14,16 +18,16 @@ var (
 	defaultAuthRequestURIBlacklist = map[string]bool{
 		"/v1/login": true,
 	}
-)
 
-const (
-	defaultAuthEnable = true
+	authEnable              = envutil.GetEnvAsBool("AUTH_ENABLE", defaultAuthEnable)
+	authMethodBlacklist     = envutil.GetEnvAsMapBool("AUTH_METHOD_BLACKLIST", defaultAuthMethodBlacklist, ",")
+	authRequestURIBlacklist = envutil.GetEnvAsMapBool("AUTH_REQUESTURI_BLACKLIST", defaultAuthRequestURIBlacklist, ",")
 )
 
 // AddAuth ...
 func AddAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !envutil.GetEnvAsBool("ENABLE_AUTH", defaultAuthEnable) || envutil.GetEnvAsMapBool("AUTH_METHOD_BLACKLIST", defaultAuthMethodBlacklist, ",")[r.Method] || envutil.GetEnvAsMapBool("AUTH_REQUESTURI_BLACKLIST", defaultAuthRequestURIBlacklist, ",")[r.RequestURI] {
+		if !authEnable || authMethodBlacklist[r.Method] || authRequestURIBlacklist[r.RequestURI] {
 			next.ServeHTTP(w, r)
 			return
 		}
