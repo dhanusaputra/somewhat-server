@@ -3,34 +3,15 @@ package middleware
 import (
 	"net/http"
 
+	"github.com/dhanusaputra/somewhat-server/pkg/env"
 	"github.com/dhanusaputra/somewhat-server/util/authutil"
-	"github.com/dhanusaputra/somewhat-server/util/envutil"
-)
-
-const (
-	defaultAuthEnable = true
-)
-
-var (
-	defaultAuthMethodBlacklist = map[string]bool{
-		"GET": true,
-	}
-	defaultAuthRequestURIBlacklist = map[string]bool{
-		"/v1/login": true,
-	}
 )
 
 // AddAuth ...
 func AddAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// TODO use watch for better performance
-		var (
-			authEnable              = envutil.GetEnvAsBool("AUTH_ENABLE", defaultAuthEnable)
-			authMethodBlacklist     = envutil.GetEnvAsMapBool("AUTH_METHOD_BLACKLIST", defaultAuthMethodBlacklist, ",")
-			authRequestURIBlacklist = envutil.GetEnvAsMapBool("AUTH_REQUESTURI_BLACKLIST", defaultAuthRequestURIBlacklist, ",")
-		)
-
-		if !authEnable || authMethodBlacklist[r.Method] || authRequestURIBlacklist[r.RequestURI] {
+		conf := env.AuthMiddlewareConf
+		if !conf.AuthEnable || conf.AuthMethodBlacklist[r.Method] || conf.AuthRequestURIBlacklist[r.RequestURI] {
 			next.ServeHTTP(w, r)
 			return
 		}
