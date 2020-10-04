@@ -16,8 +16,8 @@ var GetEnv = func(key string, defaultVal string) string {
 
 // GetEnvAsInt ...
 func GetEnvAsInt(key string, defaultVal int) int {
-	valueStr := GetEnv(key, "")
-	if val, err := strconv.Atoi(valueStr); err == nil {
+	valStr := GetEnv(key, "")
+	if val, err := strconv.Atoi(valStr); err == nil {
 		return val
 	}
 	return defaultVal

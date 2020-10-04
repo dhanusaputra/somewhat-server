@@ -18,15 +18,18 @@ var (
 	defaultAuthRequestURIBlacklist = map[string]bool{
 		"/v1/login": true,
 	}
-
-	authEnable              = envutil.GetEnvAsBool("AUTH_ENABLE", defaultAuthEnable)
-	authMethodBlacklist     = envutil.GetEnvAsMapBool("AUTH_METHOD_BLACKLIST", defaultAuthMethodBlacklist, ",")
-	authRequestURIBlacklist = envutil.GetEnvAsMapBool("AUTH_REQUESTURI_BLACKLIST", defaultAuthRequestURIBlacklist, ",")
 )
 
 // AddAuth ...
 func AddAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// TODO use watch for better performance
+		var (
+			authEnable              = envutil.GetEnvAsBool("AUTH_ENABLE", defaultAuthEnable)
+			authMethodBlacklist     = envutil.GetEnvAsMapBool("AUTH_METHOD_BLACKLIST", defaultAuthMethodBlacklist, ",")
+			authRequestURIBlacklist = envutil.GetEnvAsMapBool("AUTH_REQUESTURI_BLACKLIST", defaultAuthRequestURIBlacklist, ",")
+		)
+
 		if !authEnable || authMethodBlacklist[r.Method] || authRequestURIBlacklist[r.RequestURI] {
 			next.ServeHTTP(w, r)
 			return
