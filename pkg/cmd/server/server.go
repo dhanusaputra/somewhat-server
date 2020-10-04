@@ -58,7 +58,7 @@ func RunServer() error {
 		return fmt.Errorf("invalid TCP port for HTTP gateway: '%s'", port)
 	}
 
-	// initialize logger
+	// init
 	if err := logger.Init(cfg.LogLevel, cfg.LogTimeFormat); err != nil {
 		return fmt.Errorf("failed to initialize logger: %v", err)
 	}
