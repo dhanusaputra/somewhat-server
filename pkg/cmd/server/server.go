@@ -7,6 +7,7 @@ import (
 	"os"
 
 	pb "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
+	"github.com/dhanusaputra/somewhat-server/pkg/env"
 	"github.com/dhanusaputra/somewhat-server/pkg/logger"
 	"github.com/dhanusaputra/somewhat-server/pkg/protocol/grpc"
 	"github.com/dhanusaputra/somewhat-server/pkg/protocol/rest"
@@ -61,6 +62,7 @@ func RunServer() error {
 	if err := logger.Init(cfg.LogLevel, cfg.LogTimeFormat); err != nil {
 		return fmt.Errorf("failed to initialize logger: %v", err)
 	}
+	env.Init()
 
 	var data interface{}
 	err := jsonutil.ReadFile("./api/json/v1/db.json", &data)
