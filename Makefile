@@ -7,4 +7,7 @@ proto: ## generate proto
 mock: ## generate mocks from mockery
 	mockery --all --inpkg
 
+heroku: ## push to heroku
+	git push heroku
+
 .DEFAULT_GOAL := help
