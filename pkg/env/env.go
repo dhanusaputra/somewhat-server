@@ -10,6 +10,8 @@ type authMiddlewareConf struct {
 
 const (
 	defaultAuthEnable = true
+
+	defaultExpiredTimeInMinute = 15
 )
 
 var (
@@ -21,6 +23,11 @@ var (
 	defaultAuthRequestURIBlacklist = map[string]bool{
 		"/v1/login": true,
 	}
+
+	// Key ...
+	Key []byte
+	// JWTExpiredTimeInMinute ...
+	JWTExpiredTimeInMinute int
 )
 
 // Init ...
@@ -30,4 +37,7 @@ func Init() {
 		AuthMethodBlacklist:     envutil.GetEnvAsMapBool("AUTH_METHOD_BLACKLIST", defaultAuthMethodBlacklist, ","),
 		AuthRequestURIBlacklist: envutil.GetEnvAsMapBool("AUTH_REQUESTURI_BLACKLIST", defaultAuthRequestURIBlacklist, ","),
 	}
+
+	Key = []byte(envutil.GetEnv("KEY", ""))
+	JWTExpiredTimeInMinute = envutil.GetEnvAsInt("JWT_EXPIRED_TIME_IN_MINUTE", defaultExpiredTimeInMinute)
 }
