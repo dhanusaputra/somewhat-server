@@ -64,7 +64,7 @@ func RunServer() error {
 	}
 	env.Init()
 
-	var data interface{}
+	var data map[string]interface{}
 	err := jsonutil.ReadFile("./api/json/v1/db.json", &data)
 	if err != nil {
 		return err
@@ -76,7 +76,7 @@ func RunServer() error {
 		return err
 	}
 
-	v1API := v1.NewServer(data.(map[string]interface{}), userData)
+	v1API := v1.NewServer(data, userData)
 
 	// run HTTP gateway
 	go func() {
