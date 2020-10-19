@@ -11,8 +11,6 @@ heroku: ## push to heroku
 	git push heroku
 
 keypair: ## generate key pair
-	cd cert
-	openssl genrsa -out server.key 2048
-	openssl req -new -x509 -key server.key -out server.pem -days 3650
+	cd cert && openssl genrsa -out server.key 2048 && openssl req -new -x509 -key server.key -out server.pem -days 3650
 
 .DEFAULT_GOAL := help
