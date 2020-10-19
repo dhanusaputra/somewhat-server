@@ -2,6 +2,7 @@ package rest
 
 import (
 	"context"
+	"crypto/tls"
 	"net/http"
 	"os"
 	"os/signal"
@@ -36,6 +37,11 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 
 	mux.Handle("/metrics", promhttp.Handler())
 
+	cert, err := tls.LoadX509KeyPair("cert/server.pem", "cert/server.key")
+	if err != nil {
+		logger.Log.Fatal("failed to load key pair", zap.String("reason", err.Error()))
+	}
+
 	srv := &http.Server{
 		Addr: ":" + httpPort,
 		// add handler with middleware
@@ -43,6 +49,7 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 			middleware.AddAuth(
 				middleware.AddRequestID(
 					middleware.AddLogger(logger.Log, mux)))),
+		TLSConfig: &tls.Config{Certificates: []tls.Certificate{cert}},
 	}
 
 	// graceful shutdown
@@ -60,5 +67,5 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 	}()
 
 	logger.Log.Info("starting HTTP/REST gateway...")
-	return srv.ListenAndServe()
+	return srv.ListenAndServeTLS("", "")
 }
