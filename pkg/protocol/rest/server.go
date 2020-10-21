@@ -39,7 +39,7 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 
 	cert, err := tls.LoadX509KeyPair("cert/server.pem", "cert/server.key")
 	if err != nil {
-		logger.Log.Fatal("failed to load key pair", zap.String("reason", err.Error()))
+		logger.Log.Info("failed to load key pair", zap.String("reason", err.Error()))
 	}
 
 	srv := &http.Server{
