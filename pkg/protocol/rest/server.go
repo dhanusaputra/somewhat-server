@@ -67,5 +67,5 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 	}()
 
 	logger.Log.Info("starting HTTP/REST gateway...")
-	return srv.ListenAndServeTLS("", "")
+	return srv.ListenAndServe()
 }
