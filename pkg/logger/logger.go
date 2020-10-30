@@ -58,7 +58,8 @@ func Init(lvl int, timeFormat string) error {
 			ecfg.EncodeTime = customTimeEncoder
 			useCustomTimeFormat = true
 		}
-		consoleEncoder := zapcore.NewJSONEncoder(ecfg)
+		ecfg.EncodeLevel = zapcore.CapitalColorLevelEncoder
+		consoleEncoder := zapcore.NewConsoleEncoder(ecfg)
 
 		// Join the outputs, encoders, and level-handling functions into
 		// zapcore.
