@@ -153,6 +153,19 @@ func TestUpdateSomething(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name: "ID empty",
+			args: args{
+				ctx: ctx,
+				req: &v1.UpdateSomethingRequest{
+					Api: "v1",
+					Something: &v1.Something{
+						Description: "{\"nothing\":\"nothing personal here\"}",
+					},
+				},
+			},
+			wantErr: true,
+		},
+		{
 			name: "find ID failed",
 			args: args{
 				ctx: ctx,
