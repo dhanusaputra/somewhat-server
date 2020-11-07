@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 	"github.com/dhanusaputra/somewhat-server/util/authutil"
+	"github.com/go-playground/validator"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -23,13 +23,15 @@ const (
 type Server struct {
 	data     map[string]interface{}
 	userData []v1.User
+	validate *validator.Validate
 }
 
 // NewServer ...
-func NewServer(data map[string]interface{}, userData []v1.User) *Server {
+func NewServer(data map[string]interface{}, userData []v1.User, v *validator.Validate) *Server {
 	return &Server{
 		data:     data,
 		userData: userData,
+		validate: v,
 	}
 }
 
@@ -59,12 +61,20 @@ func (s *Server) CreateSomething(ctx context.Context, req *v1.CreateSomethingReq
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
-	if strings.TrimSpace(req.Something.Id) == "" {
-		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf("ID is required"))
+
+	v := &createSomethingRequest{
+		ID:          req.Something.Id,
+		Title:       req.Something.Title,
+		Description: req.Something.Description,
 	}
+	if err := s.validate.Struct(v); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	if _, ok := s.data[req.Something.Id]; ok {
 		return nil, status.Error(codes.AlreadyExists, fmt.Sprintf("failed to create, ID: %v already exists", req.Something.Id))
 	}
+
 	var desc map[string]string
 	err := json.Unmarshal([]byte(req.Something.Description), &desc)
 	if err != nil {
@@ -82,9 +92,20 @@ func (s *Server) UpdateSomething(ctx context.Context, req *v1.UpdateSomethingReq
 	if err := s.checkAPI(req.Api); err != nil {
 		return nil, err
 	}
+
+	v := &updateSomethingRequest{
+		ID:          req.Something.Id,
+		Title:       req.Something.Title,
+		Description: req.Something.Description,
+	}
+	if err := s.validate.Struct(v); err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
 	if _, ok := s.data[req.Something.Id]; !ok {
 		return nil, status.Error(codes.NotFound, fmt.Sprintf("failed to find ID: %v", req.Something.Id))
 	}
+
 	var desc map[string]string
 	err := json.Unmarshal([]byte(req.Something.Description), &desc)
 	if err != nil {

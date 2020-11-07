@@ -13,6 +13,7 @@ import (
 	"github.com/dhanusaputra/somewhat-server/pkg/protocol/rest"
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/service/v1"
 	"github.com/dhanusaputra/somewhat-server/util/jsonutil"
+	"github.com/go-playground/validator"
 )
 
 // Config is configuration for Server
@@ -63,6 +64,7 @@ func RunServer() error {
 		return fmt.Errorf("failed to initialize logger: %v", err)
 	}
 	env.Init()
+	v := validator.New()
 
 	var data map[string]interface{}
 	err := jsonutil.ReadFile("./api/json/v1/db.json", &data)
@@ -76,7 +78,7 @@ func RunServer() error {
 		return err
 	}
 
-	v1API := v1.NewServer(data, userData)
+	v1API := v1.NewServer(data, userData, v)
 
 	// run HTTP gateway
 	go func() {
