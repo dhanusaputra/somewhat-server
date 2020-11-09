@@ -46,9 +46,10 @@ func RunServer(ctx context.Context, grpcPort, httpPort string) error {
 		Addr: ":" + httpPort,
 		// add handler with middleware
 		Handler: cors.Default().Handler(
-			middleware.AddAuth(
-				middleware.AddRequestID(
-					middleware.AddLogger(logger.Log, mux)))),
+			middleware.AddRateLimiter(
+				middleware.AddAuth(
+					middleware.AddRequestID(
+						middleware.AddLogger(logger.Log, mux))))),
 		TLSConfig: &tls.Config{Certificates: []tls.Certificate{cert}},
 	}
 
