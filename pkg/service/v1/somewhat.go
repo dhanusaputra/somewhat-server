@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
+	"github.com/dhanusaputra/somewhat-server/pkg/logger"
 	"github.com/dhanusaputra/somewhat-server/util/authutil"
 	"github.com/go-playground/validator"
+	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -198,12 +199,12 @@ func (s *Server) Me(ctx context.Context, req *v1.MeRequest) (*v1.MeResponse, err
 		return nil, status.Error(codes.Unknown, "metadata is required")
 	}
 	auth := md.Get("authorization")
-	if len(auth[0]) == 0 {
+	if len(auth) == 0 || len(auth[0]) == 0 {
 		return nil, status.Error(codes.InvalidArgument, "authorization is required")
 	}
 	_, claims, err := authutil.ValidateJWT(auth[0])
 	if err != nil {
-		log.Print(err.Error())
+		logger.Log.Error("failed to validateJWT", zap.Error(err))
 	}
 	return &v1.MeResponse{
 		Api: apiVersion,
