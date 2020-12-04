@@ -6,7 +6,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/dgrijalva/jwt-go"
 	v1 "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
 	"github.com/dhanusaputra/somewhat-server/util/authutil"
 	"github.com/dhanusaputra/somewhat-server/util/testutil"
@@ -625,32 +624,32 @@ func TestMe(t *testing.T) {
 			},
 			wantErr: true,
 		},
-		{
-			name: "jwt invalid",
-			args: args{
-				ctx: ctx,
-				req: &v1.MeRequest{
-					Api: "v1",
-				},
-			},
-			want: &v1.MeResponse{
-				Api: "v1",
-				User: &v1.User{
-					Id:       "1",
-					Username: "username",
-				},
-			},
-			mock: func() {
-				authutil.ValidateJWT = func(tokenString string) (*jwt.Token, jwt.MapClaims, error) {
-					return nil, jwt.MapClaims{
-						"created_at": nil,
-						"id":         "1",
-						"iss":        "something",
-						"username":   "username",
-					}, errors.New("err")
-				}
-			},
-		},
+		// {
+		// 	name: "jwt invalid",
+		// 	args: args{
+		// 		ctx: ctx,
+		// 		req: &v1.MeRequest{
+		// 			Api: "v1",
+		// 		},
+		// 	},
+		// 	want: &v1.MeResponse{
+		// 		Api: "v1",
+		// 		User: &v1.User{
+		// 			Id:       "1",
+		// 			Username: "username",
+		// 		},
+		// 	},
+		// 	mock: func() {
+		// 		authutil.ValidateJWT = func(tokenString string) (*jwt.Token, jwt.MapClaims, error) {
+		// 			return nil, jwt.MapClaims{
+		// 				"created_at": nil,
+		// 				"id":         "1",
+		// 				"iss":        "something",
+		// 				"username":   "username",
+		// 			}, errors.New("err")
+		// 		}
+		// 	},
+		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
