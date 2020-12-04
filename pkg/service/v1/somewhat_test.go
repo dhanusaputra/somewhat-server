@@ -11,7 +11,6 @@ import (
 	"github.com/dhanusaputra/somewhat-server/util/testutil"
 	"github.com/go-playground/validator"
 	"github.com/mohae/deepcopy"
-	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -383,7 +382,9 @@ func TestListSomething(t *testing.T) {
 				t.Errorf("ListSomething() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			assert.Equal(t, tt.want, got)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("ListSomething() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }
