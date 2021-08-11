@@ -3,10 +3,9 @@ package authutil
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
-	"github.com/dgrijalva/jwt-go"
 	pb "github.com/dhanusaputra/somewhat-server/pkg/api/v1"
+	"github.com/golang-jwt/jwt"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSignJWT(t *testing.T) {

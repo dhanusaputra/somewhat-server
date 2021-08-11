@@ -3,10 +3,10 @@ module github.com/dhanusaputra/somewhat-server
 go 1.13
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/httprate v0.4.0
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-playground/validator v9.31.0+incompatible
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang/protobuf v1.4.2
 	github.com/google/go-cmp v0.5.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0

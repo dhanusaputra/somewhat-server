@@ -23,7 +23,7 @@ var (
 	}
 
 	testUserData = []v1.User{
-		v1.User{
+		{
 			Username:     "username",
 			PasswordHash: "$2y$10$e2d/bL85VdUak2nyPdQA/uGUW6p6s1iT4Q5lPdU00slPvp6wddssO",
 		},
