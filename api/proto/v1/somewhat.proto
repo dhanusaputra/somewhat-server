@@ -14,7 +14,6 @@ option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
 		contact: {
 			name: "somewhat project";
 			url: "https://github.com/dhanusaputra/somewhat-server";
-			email: "andreasdhanu@gmail.com";
         };
     };
     schemes: HTTP;
